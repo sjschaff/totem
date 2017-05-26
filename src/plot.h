@@ -1,3 +1,6 @@
+#ifndef plot_h
+#define plot_h
+
 #include <Plotter.h>
 
 class Plot
@@ -20,3 +23,5 @@ class Plot
 		Plot(bool enable);
 		void plot();
 };
+
+#endif

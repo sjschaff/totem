@@ -1,3 +1,6 @@
+#ifndef audio_h
+#define audio_h
+
 #include <Audio.h>
 #include <Wire.h>
 
@@ -16,3 +19,5 @@ public:
 	double ReadPeak();
 	double ReadPeakToPeak();
 };
+
+#endif

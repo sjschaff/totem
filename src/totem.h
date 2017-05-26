@@ -3,6 +3,7 @@
 #include "audio.h"
 #include "leds.h"
 #include "plot.h"
+#include "log.h"
 
 typedef LedStrip Led;
 
@@ -12,8 +13,9 @@ public:
 	LedStrip strip;
 	Audio audio;
 	Plot plot;
+	Log log;
 
-	Totem() : strip(3), audio(), plot(true)
+	Totem() : strip(3), audio(), plot(true), log(false)
 	{
 		setup();
 	}
@@ -24,11 +26,6 @@ public:
 			samples[i] = samplesSmooth[i] = 0;
 
 		iSmp = 0;
-
-		return;
-
-		Serial.begin(9600);
-
 	}
 
 	// Config
@@ -70,6 +67,7 @@ public:
 		samplesSmooth[iSmp] = sound;
 
 		cSmp = (analogRead(A20) >> 10) + 32;
+		log.println(cSmp);
 
 		Statistic stats;
 		for (uint i = 0; i < cSmp; ++i)
