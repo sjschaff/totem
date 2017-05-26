@@ -1,6 +1,7 @@
 #include <Statistic.h>
 #include "util.h"
 #include "audio.h"
+#include "input.h"
 #include "leds.h"
 #include "plot.h"
 #include "log.h"
@@ -12,10 +13,16 @@ class Totem
 public:
 	LedStrip strip;
 	Audio audio;
+	Input input;
 	Plot plot;
 	Log log;
 
-	Totem() : strip(3), audio(), plot(true), log(false)
+	Totem() :
+		strip(3),
+		audio(),
+		input(16),
+		plot(true),
+		log(true)
 	{
 		setup();
 	}
@@ -66,7 +73,8 @@ public:
 
 		samplesSmooth[iSmp] = sound;
 
-		cSmp = (analogRead(A20) >> 10) + 32;
+		cSmp = input.AnalogReadInt(A20, 6) + 32;
+		//(analogRead(A20) >> 10) + 32;
 		log.println(cSmp);
 
 		Statistic stats;
