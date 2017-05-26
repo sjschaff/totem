@@ -22,7 +22,7 @@ public:
 		audio(),
 		input(16),
 		plot(true),
-		log(true)
+		log(false)
 	{
 		setup();
 	}
@@ -111,15 +111,7 @@ public:
 
 		sound = 1;
 
-		Colr colr = frame == 0
-			? Colr::Red
-			: frame == 1
-				? Colr::Green
-				: Colr::Blue;
-
-		colr *= (maxBrightness * sound);
-		strip.spinStrip(colr, millis);
-		//strip.setStripColor(colr);
+		LightStrip(sound*maxBrightness);
 
 		plot.val = raw;
 		plot.avg = avg; // this is nan every once in a while
@@ -127,5 +119,16 @@ public:
 		plot.plot();
 	}
 
+	void LightStrip(double intensity)
+	{
+		Colr colr = frame == 0
+			? Colr::Red
+			: frame == 1
+				? Colr::Green
+				: Colr::Blue;
 
+		colr *= intensity;
+		strip.spinStrip(colr, millis);
+		//strip.setStripColor(colr);
+	}
 };
