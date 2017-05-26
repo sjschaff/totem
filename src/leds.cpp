@@ -32,7 +32,7 @@ void LedStrip::show() { strip.show(); }
 void LedStrip::setStripColor(Colr colr)
 {
 	colr = colr.gammaCorrect();
-	for (ushort i = 0; i < 2;++i)//cLED; ++i)
+	for (ushort i = 0; i < cLED; ++i)
 		setColorNoGamma(i, colr);
 	strip.show();
 }
