@@ -17,6 +17,7 @@ class LedStrip
 		void show();
 
 		void setStripColor(Colr colr);
+		void spinStrip(Colr colr, ulong time);
 
 		// TODO Make useful
 		static const ushort cLED;
