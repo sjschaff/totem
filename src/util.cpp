@@ -28,3 +28,8 @@ double dmap(double val, double fMin, double fMax, double tMin, double tMax)
 	  ((val - fMin) / (fMax - fMin)) * (tMax - tMin) + tMin,
 	  tMin, tMax);
 }
+
+ubyte lerp(ubyte a, ubyte b, float fr)
+{
+	  return (b - a) * fr + a;
+}

@@ -6,8 +6,6 @@
 #include "plot.h"
 #include "log.h"
 
-typedef LedStrip Led;
-
 class Totem
 {
 public:
@@ -51,6 +49,25 @@ public:
 	uint msLastBeat = 0;
 	void loop()
 	{
+		float x = dmap(input.AnalogRead(A20), 0, 1, -60, 60);
+		float w = dmap(input.AnalogRead(A19), 0, 1, 5, 60);
+
+		strip.verticalLineFace(5, x, w);
+/*
+		strip.rainbowFace(5,
+			input.AnalogRead(A20),
+			input.AnalogRead(A19));*/
+
+		strip.show();
+
+		plot.x = x;
+		plot.w = w;
+		plot.plot();
+		delay(100);
+		return;
+
+
+
 		double energy = audio.ReadEnergy(10);
 		Statistic stats;
 		for (uint i = 0; i < cSmp; ++i)

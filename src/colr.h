@@ -6,8 +6,11 @@
 struct Colr
 {
 	static const Colr Red;
+	static const Colr Yellow;
 	static const Colr Green;
+	static const Colr Cyan;
 	static const Colr Blue;
+	static const Colr Purple;
 
 	static const Colr Black;
 	static const Colr White;
@@ -25,12 +28,12 @@ struct Colr
 	Colr operator*(ubyte v) const;
 
 	Colr gammaCorrect();
+
+	static Colr Lerp(Colr a, Colr b, float fr);
+	static Colr Hue(float frHue);
 };
 /*
-int lerp(int a, int b, float fr)
-{
-  return ((b - a) * fr + a);
-}
+
 
 Colr Lerp(Colr a, Colr b, float fr)
 {

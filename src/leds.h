@@ -4,30 +4,47 @@
 #include <Adafruit_NeoPixel.h>
 #include "colr.h"
 
+struct Led
+{
+	uint iFace;
+
+	float polarFace;
+	float radFace;
+
+	float xFace, yFace;
+};
+
 class LedStrip
 {
-	private:
-		Adafruit_NeoPixel strip;
-		void setColorNoGamma(ushort px, Colr colr);
+public:
+	// TODO Make useful
+	static const ushort cLED;
+	static const ushort outer[];
+	static const ushort cOuter;
+	static const ushort inner[];
+	static const ushort cInner;
+	static const ushort center;
+	static const ushort cFace;
+	static const ushort cTotal;
 
-	public:
-		LedStrip(int pin);
+private:
+	static Led* GenerateLeds();
+	Adafruit_NeoPixel strip;
+	const Led* const leds;
+	void setColorNoGamma(ushort px, Colr colr);
 
-		void setColor(ushort px, Colr colr);
-		void show();
+public:
+	LedStrip(int pin);
 
-		void setStripColor(Colr colr);
-		void spinStrip(Colr colr, ulong time);
+	void setColor(ushort px, Colr colr);
+	void show();
 
-		// TODO Make useful
-		static const ushort cLED;
-		static const ushort outer[];
-		static const ushort cOuter;
-		static const ushort inner[];
-		static const ushort cInner;
-		static const ushort center;
-		static const ushort cFace;
-		static const ushort cTotal;
+	void spinStrip(Colr colr, ulong time);
+
+	// color space tests
+	void setStripColor(Colr colr);
+	void verticalLineFace(uint face, float x, float w);
+	void rainbowFace(uint face, float offs, float polarOffs);
 };
 
 #endif

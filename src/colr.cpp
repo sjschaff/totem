@@ -1,8 +1,11 @@
 #include "colr.h"
 
 const Colr Colr::Red = Colr(0xFF, 0, 0);
+const Colr Colr::Yellow = Colr(0xFF, 0xFF, 0);
 const Colr Colr::Green = Colr(0, 0xFF, 0);
+const Colr Colr::Cyan = Colr(0, 0xFF, 0xFF);
 const Colr Colr::Blue = Colr(0, 0, 0xFF);
+const Colr Colr::Purple = Colr(0xFF, 0, 0xFF);
 const Colr Colr::Black = Colr(0);
 const Colr Colr::White = Colr(0xFF);
 
@@ -28,4 +31,28 @@ void Colr::operator*=(double v)
 Colr Colr::gammaCorrect()
 {
 	return Colr( gamma(r), gamma(g), gamma(b));
+}
+
+Colr Colr::Lerp(Colr a, Colr b, float fr)
+{
+	return Colr(
+		lerp(a.r, b.r, fr),
+		lerp(a.g, b.g, fr),
+		lerp(a.b, b.b, fr));
+}
+
+Colr Colr::Hue(float fr)
+{
+	fr = frac(fr);
+	int step = fr * 6;
+	fr = frac(fr*6);
+	switch (step)
+	{
+		case 0: return Lerp(Red, Yellow, fr);
+		case 1: return Lerp(Yellow, Green, fr);
+		case 2: return Lerp(Green, Cyan, fr);
+		case 3: return Lerp(Cyan, Blue, fr);
+		case 4: return Lerp(Blue, Purple, fr);
+		default: return Lerp(Purple, Red, fr);
+	}
 }

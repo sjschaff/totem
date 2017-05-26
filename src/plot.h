@@ -20,6 +20,9 @@ class Plot
 		double avg = 0;
 		double std = 0;
 
+		double x = 0;
+		double w = 0;
+
 		Plot(bool enable);
 		void plot();
 };

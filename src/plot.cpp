@@ -5,6 +5,11 @@ Plot::Plot(bool enable) : enable(enable)
 	if (enable)
 	{
 		plotter.Begin();
+		plotter.AddTimeGraph("Sensor", 500,
+			"x", x,
+			"w", w
+		);
+/*
 		plotter.AddTimeGraph("Audio Sensor", 500,
 			"val", val,
 			"thresh", smoothed,
@@ -12,7 +17,7 @@ Plot::Plot(bool enable) : enable(enable)
 			"avg", avg,
 			"std", std
 			//"min", minZero
-		);
+		);*/
 	}
 }
 

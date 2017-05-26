@@ -13,6 +13,10 @@ typedef uint16 ushort;
 //typedef uint32 uint;
 //typedef uint64 ulong;
 
+#ifndef PI
+#define PI 3.141592
+#endif
+
 // TODO doubles
 // TODO we should prob just use a gamma table
 ubyte gamma(ubyte v);
@@ -22,5 +26,7 @@ double clamp(double v, double min, double max);
 double saturate(double v);
 double frac(double v);
 double dmap(double val, double fMin, double fMax, double tMin, double tMax);
+
+ubyte lerp(ubyte a, ubyte b, float fr);
 
 #endif

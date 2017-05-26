@@ -4,6 +4,7 @@
 //Main main;
 void setup() {
 	Totem totem;
+	delay(100);
 	while (1) {
 		totem.loop();
 		yield();
