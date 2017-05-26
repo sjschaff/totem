@@ -36,7 +36,7 @@ public:
 	 uint cSmp = 42;
 	static const uint cReadback = 13;
 	 double threshold = 1.2;
-	static constexpr double maxBrightness = .4;
+	static constexpr double maxBrightness = .35;
 
 	// State
 	uint frame = 0;
@@ -90,7 +90,7 @@ public:
 		plot.smoothedRel = sound - avg;
 		if (sound > thresh)
 		{
-			sound = 1;
+		//	sound = 1;
 			if (!wasLoud)
 			{
 				frame = (frame + 1) % 3;
@@ -99,9 +99,11 @@ public:
 		}
 		else
 		{
-			sound = 0;
+			//sound = 0;
 			wasLoud = false;
 		}
+
+		sound = 1;
 
 		Colr colr = frame == 0
 			? Colr::Red
@@ -110,7 +112,8 @@ public:
 				: Colr::Blue;
 
 		colr *= (maxBrightness * sound);
-		strip.setStripColor(colr * (maxBrightness * sound));
+		strip.spinStrip(colr, millis);
+		//strip.setStripColor(colr);
 
 		plot.val = raw;
 		plot.avg = avg; // this is nan every once in a while
