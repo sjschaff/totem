@@ -24,5 +24,7 @@ double frac(double v)
 // TODO Template
 double dmap(double val, double fMin, double fMax, double tMin, double tMax)
 {
-  return ((val - fMin) / (fMax - fMin)) * (tMax - tMin) + tMin;
+  return clamp(
+	  ((val - fMin) / (fMax - fMin)) * (tMax - tMin) + tMin,
+	  tMin, tMax);
 }

@@ -29,17 +29,14 @@ public:
 
 	void setup()
 	{
-		for (uint i = 0; i < cSmpMax; ++i)
-			samples[i] = samplesSmooth[i] = 0;
+		for (uint i = 0; i < cSmp; ++i)
+			samples[i] =0;
 
 		iSmp = 0;
 	}
 
 	// Config
-	static const uint cSmpMax = 1024;
-	 uint cSmp = 42;
-	static const uint cReadback = 13;
-	 double threshold = 1.2;
+	static const uint cSmp = 43;
 	static constexpr double maxBrightness = .35;
 
 	// State
@@ -48,55 +45,46 @@ public:
 	elapsedMillis millis;
 
 	uint iSmp;
-	double samples[cSmpMax];
-	double samplesSmooth[cSmpMax];
-
+	double samples[cSmp];
 
 	void loop()
 	{
-		//strip.spinStrip(Colr::Red * .3, millis);
-		//return;
-
-		double raw = audio.ReadPeakToPeak();
-
-		//cReadback = plotA5+1; // 13
-		double wt = 1 - 1.0/cReadback;
-
-		samples[iSmp] = raw;
-
-		double sound = 0;
-		for (uint i = 0; i <= cReadback; ++i)
-		{
-			double smp = samples[iSmp - (cReadback - i)];
-			sound = sound * wt + smp * (1- wt);
-		}
-
-		samplesSmooth[iSmp] = sound;
-
-		cSmp = input.AnalogReadInt(A20, 6) + 32;
-		//(analogRead(A20) >> 10) + 32;
-		log.println(cSmp);
-
+		double energy = audio.ReadEnergy(3);
 		Statistic stats;
 		for (uint i = 0; i < cSmp; ++i)
-		{
-			int iSmpAvg = (iSmp - 1 - i + cSmpMax) % cSmpMax;
-			stats.add(samplesSmooth[iSmpAvg]);
-		}
-
-		iSmp = (iSmp + 1) % cSmpMax;
-
-
-		threshold = dmap(analogRead(A19) >> 8, 0, 256, 1, 3);
+			stats.add(samples[i]);
 		double avg = stats.average();
-		double std = stats.pop_stdev();
-		double thresh = avg + std * threshold;
 
-		plot.smoothed = sound;
-		plot.smoothedRel = sound - avg;
-		if (sound > thresh)
+		double variance = 0;
+		for (uint i = 0; i < cSmp; ++i)
 		{
-		//	sound = 1;
+			double delta = samples[i] - avg;
+			variance += delta*delta;
+		}
+		variance /= 43.0;
+		plot.val = energy;
+		plot.avg = avg;
+		plot.std = variance;
+		double C = -.0025714 * variance + 1.5142857;
+		plot.smoothed = avg * C;
+		plot.plot();
+
+		samples[iSmp] = energy;
+		iSmp = (iSmp + 1) % 43;
+
+		double light = dmap(energy,
+			avg - (plot.smoothed - avg),
+			plot.smoothed,
+			.2, 1);
+
+		LightStrip(light, plot.val > plot.smoothed);
+	}
+
+	void LightStrip(double sound, bool isLoud)
+	{
+		if (isLoud)
+		{
+			//sound = 1;
 			if (!wasLoud)
 			{
 				frame = (frame + 1) % 3;
@@ -109,26 +97,16 @@ public:
 			wasLoud = false;
 		}
 
-		sound = 1;
+	//	sound = 1;
 
-		LightStrip(sound*maxBrightness);
-
-		plot.val = raw;
-		plot.avg = avg; // this is nan every once in a while
-		plot.std = thresh - avg;
-		plot.plot();
-	}
-
-	void LightStrip(double intensity)
-	{
 		Colr colr = frame == 0
 			? Colr::Red
 			: frame == 1
 				? Colr::Green
 				: Colr::Blue;
-
-		colr *= intensity;
-		strip.spinStrip(colr, millis);
-		//strip.setStripColor(colr);
+//colr = Colr::Red;
+		colr *= sound * maxBrightness;
+		//strip.spinStrip(colr, millis);
+		strip.setStripColor(colr);
 	}
 };

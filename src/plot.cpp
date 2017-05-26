@@ -6,12 +6,12 @@ Plot::Plot(bool enable) : enable(enable)
 	{
 		plotter.Begin();
 		plotter.AddTimeGraph("Audio Sensor", 500,
-			//"val", val,
-			"smooth", smoothed,
-			"smooth rel", smoothedRel,
+			"val", val,
+			"thresh", smoothed,
+			//"smooth rel", smoothedRel,
 			"avg", avg,
-			"std", std,
-			"min", minZero
+			"std", std
+			//"min", minZero
 		);
 	}
 }
