@@ -1,32 +1,32 @@
+#ifndef colr_h
+#define colr_h
 
-#include <Adafruit_NeoPixel.h>
-#ifdef __AVR__
-  #include <avr/power.h>
-#endif
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(195, 6, NEO_GRB + NEO_KHZ800);
+#include "util.h"
 
-typedef struct _Colr
+struct Colr
 {
-  int r;
-  int g;
-  int b;
+	static const Colr Red;
+	static const Colr Green;
+	static const Colr Blue;
 
-  uint32_t ToColor()
-  {
-    return strip.Color(r,g,b);
-  }
+	static const Colr Black;
+	static const Colr White;
 
-} Colr;
+	ubyte r;
+	ubyte g;
+	ubyte b;
 
-Colr ColrNew(int r, int g, int b)
-{
-    Colr colr;
-    colr.r = r;
-    colr.g = g;
-    colr.b = b;
-    return colr;
-}
+	Colr();
+	Colr(byte grey);
+	Colr(ubyte r, ubyte g, ubyte b);
 
+	Colr operator*(double v) const;
+	void operator*=(double v);
+	Colr operator*(ubyte v) const;
+
+	Colr gammaCorrect();
+};
+/*
 int lerp(int a, int b, float fr)
 {
   return ((b - a) * fr + a);
@@ -57,3 +57,5 @@ Colr ColrForHue(float hue)
     else if (hue < 5) return Lerp(ColrNew(0x00, 0x00, 0xFF), ColrNew(0xFF, 0x00, 0xFF), hue - 4);
     else              return Lerp(ColrNew(0xFF, 0x00, 0xFF), ColrNew(0xFF, 0x00, 0x00), hue - 5);
 }
+*/
+#endif

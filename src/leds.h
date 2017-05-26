@@ -1,19 +1,32 @@
+#ifndef leds_h
+#define leds_h
 
-const int cLED = 195;
+#include <Adafruit_NeoPixel.h>
+#include "colr.h"
 
-int outer[] = {
-  0, 1, 2, 3, 4, 5, 6, 7, 15, 14
+class LedStrip
+{
+	private:
+		Adafruit_NeoPixel strip;
+		void setColorNoGamma(ushort px, Colr colr);
+
+	public:
+		LedStrip(int pin);
+
+		void setColor(ushort px, Colr colr);
+		void show();
+
+		void setStripColor(Colr colr);
+
+		// TODO Make useful
+		static const ushort cLED;
+		static const ushort outer[];
+		static const ushort cOuter;
+		static const ushort inner[];
+		static const ushort cInner;
+		static const ushort center;
+		static const ushort cFace;
+		static const ushort cTotal;
 };
 
-int cOuter = 10;
-
-int inner[] = {
-  13, 11, 10, 9, 8
-};
-
-int cInner = 5;
-
-int center = 12;
-
-int cFace = 11;
-int cTotal = 16;
+#endif

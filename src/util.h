@@ -1,0 +1,26 @@
+#ifndef util_h
+#define util_h
+
+#include <Arduino.h>
+
+typedef uint8_t uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint32;
+typedef uint64_t uint64;
+
+typedef uint8 ubyte;
+typedef uint16 ushort;
+//typedef uint32 uint;
+//typedef uint64 ulong;
+
+// TODO doubles
+// TODO we should prob just use a gamma table
+ubyte gamma(ubyte v);
+
+// TODO Template
+double clamp(double v, double min, double max);
+double saturate(double v);
+double frac(double v);
+double dmap(double val, double fMin, double fMax, double tMin, double tMax);
+
+#endif
