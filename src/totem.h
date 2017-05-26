@@ -37,7 +37,7 @@ public:
 
 	// Config
 	static const uint cSmp = 43;
-	static constexpr double maxBrightness = .35;
+	static constexpr double maxBrightness = .2;
 
 	// State
 	uint frame = 0;
@@ -47,9 +47,11 @@ public:
 	uint iSmp;
 	double samples[cSmp];
 
+	static const uint msPerBeat = 35;
+	uint msLastBeat = 0;
 	void loop()
 	{
-		double energy = audio.ReadEnergy(3);
+		double energy = audio.ReadEnergy(10);
 		Statistic stats;
 		for (uint i = 0; i < cSmp; ++i)
 			stats.add(samples[i]);
@@ -62,22 +64,38 @@ public:
 			variance += delta*delta;
 		}
 		variance /= 43.0;
-		plot.val = energy;
-		plot.avg = avg;
-		plot.std = variance;
+
 		double C = -.0025714 * variance + 1.5142857;
-		plot.smoothed = avg * C;
-		plot.plot();
+		double threshold = avg * C;
 
 		samples[iSmp] = energy;
 		iSmp = (iSmp + 1) % 43;
+
+		bool isBeat = true;
+
+		bool isLoud = energy > threshold;
+		bool wasBeat = (millis - msLastBeat) < msPerBeat;
+
+		if (!wasBeat)
+		{
+			if (isLoud)
+				msLastBeat = millis;
+			else
+				isBeat = false;
+		}
+
+		plot.val = energy;
+		plot.avg = avg;
+		plot.std = variance;
+		plot.smoothed = isBeat ? .1 : 0;
+		plot.plot();
 
 		double light = dmap(energy,
 			avg - (plot.smoothed - avg),
 			plot.smoothed,
 			.2, 1);
 
-		LightStrip(light, plot.val > plot.smoothed);
+		LightStrip(light, isLoud);
 	}
 
 	void LightStrip(double sound, bool isLoud)

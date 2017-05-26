@@ -35,14 +35,15 @@ double Audio::ReadPeakToPeak()
 double Audio::ReadEnergy(uint maxBin)
 {
 	while (!fft1024.available()); // Skip every other (1/2 overlap)
+	// TODO: combine? despite 50% overlap?
 	while (!fft1024.available());
 
 	double energy = 0;
 	for (uint i = 1; i < maxBin; ++i)
 	{
-		double bin = fft1024.read(i);
+		double bin = fft1024.read(i);// supposedly = sqrt(real^2 + imag^2),
 		energy += bin;
-		// TODO nead squaring?
+		// TODO nead squaring?doubling for 512 -> 1024
 		//*100;//bin;
 	}
 
