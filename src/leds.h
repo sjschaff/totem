@@ -11,7 +11,8 @@ struct Led
 	float polarFace;
 	float radFace;
 
-	float xFace, yFace;
+	vec2 ptFace;
+	vec3 zpt;
 };
 
 class LedStrip
@@ -43,8 +44,9 @@ public:
 
 	// color space tests
 	void setStripColor(Colr colr);
-	void verticalLineFace(uint face, float x, float w);
-	void rainbowFace(uint face, float offs, float polarOffs);
+	void globalAxis(uint face, float x, float y, float z, float w);
+	void rainbowFace(uint face);
+	void rainbowFaceLinear(uint face, float offs, float polarOffs);
 };
 
 #endif

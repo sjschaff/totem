@@ -3,6 +3,13 @@
 
 #include <Arduino.h>
 
+//#define GLM_FORCE_CXX98
+//#include <glm/glm.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+
+using namespace glm;
+
 typedef uint8_t uint8;
 typedef uint16_t uint16;
 typedef uint32_t uint32;

@@ -9,6 +9,8 @@ private:
 	const bool enable;
 
 public:
+	static Log* log;
+
 	Log(bool enable);
 
 	template<class T>

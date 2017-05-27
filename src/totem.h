@@ -19,8 +19,8 @@ public:
 		strip(3),
 		audio(),
 		input(16),
-		plot(true),
-		log(false)
+		plot(false),
+		log(true)
 	{
 		setup();
 	}
@@ -28,7 +28,7 @@ public:
 	void setup()
 	{
 		for (uint i = 0; i < cSmp; ++i)
-			samples[i] =0;
+			samples[i] = 0;
 
 		iSmp = 0;
 	}
@@ -49,21 +49,25 @@ public:
 	uint msLastBeat = 0;
 	void loop()
 	{
-		float x = dmap(input.AnalogRead(A20), 0, 1, -60, 60);
-		float w = dmap(input.AnalogRead(A19), 0, 1, 5, 60);
+		float x = dmap(input.AnalogRead(A20), 0, 1, -120, 120);
+		float y = dmap(input.AnalogRead(A19), 0, 1, 0, 240);
+		float z = dmap(input.AnalogRead(A18), 0, 1, -120, 120);
 
-		strip.verticalLineFace(5, x, w);
+		//strip.rainbowFace(0);
+
+		strip.globalAxis(5, x, y, z, 23);
+		//strip.rainbowFace(0);
 /*
-		strip.rainbowFace(5,
+		strip.rainbowFaceLinear(5,
 			input.AnalogRead(A20),
 			input.AnalogRead(A19));*/
 
 		strip.show();
 
 		plot.x = x;
-		plot.w = w;
+	//	plot.w = w;
 		plot.plot();
-		delay(100);
+		delay(2.5);
 		return;
 
 
