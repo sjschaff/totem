@@ -35,7 +35,7 @@ public:
 
 	// Config
 	static const uint cSmp = 43;
-	static constexpr double maxBrightness = .2;
+	static constexpr double maxBrightness = .3;
 
 	// State
 	uint frame = 0;
@@ -55,20 +55,22 @@ public:
 
 		//strip.rainbowFace(0);
 
+//strip.rainbowFace(0);
 		strip.globalAxis(5, x, y, z, 23);
+		return;
 		//strip.rainbowFace(0);
 /*
 		strip.rainbowFaceLinear(5,
 			input.AnalogRead(A20),
 			input.AnalogRead(A19));*/
-
+/*
 		strip.show();
 
 		plot.x = x;
 	//	plot.w = w;
 		plot.plot();
 		delay(2.5);
-		return;
+		return;*/
 
 
 

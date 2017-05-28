@@ -15,30 +15,19 @@ byte Tail(float head, float led, float len, float headLen)
 void LedStrip::spinStrip(Colr col, ulong time)
 {
 	time = time % 6000;
-	for (int iFace = 0; iFace < cFace; ++iFace)
+	double head = frac(revsPerSec * time / 1000.0);
+
+	for (uint i = 0; i < cLED; ++i)
 	{
-		int iLedFace = iFace*cTotal;
-
-		double head = frac(revsPerSec * time / 1000.0);
-
-		for (int i = 0; i < cOuter; ++i)
+		Led led = leds[i];
+		if (led.iRing == 0)
+			setColor(i, Colr(0));
+		else
 		{
-			int iLed = iLedFace + outer[i];
-			byte tail = Tail(head, 1 - (i / (float)(cOuter - 1)), .6, 2/(float)cOuter);
-			setColor(iLed, col * tail);
+			float aa = (led.iRing == 2 ? 2 : 1)*led.polarDelta;
+			byte tail = Tail(head, led.polarFace, .6, aa);
+			setColor(i, col * tail);
 		}
-
-		for (int i = 0; i < cInner; ++i)
-		{
-			int iLed = iLedFace + inner[i];
-			byte tail = Tail(head, 1 - (i / (float)(cInner - 1)), .6, 1/(float)cInner);
-		//	setColor(iLed, col);//tail, 0, 0);
-			setColor(iLed, col * tail);
-		}
-
-		float intens = (time % 1000) / 1000.0;
-		byte v = intens * 255;
-		setColor(iLedFace + center, col * v);//0x80, 0x00, 0x40);
 	}
 
 	show();

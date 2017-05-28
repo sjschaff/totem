@@ -3,7 +3,6 @@
 
 #include <Arduino.h>
 
-//#define GLM_FORCE_CXX98
 //#include <glm/glm.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
