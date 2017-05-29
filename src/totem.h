@@ -16,7 +16,7 @@ public:
 	Log log;
 
 	Totem() :
-		strip(3),
+		strip(23),
 		audio(),
 		input(16),
 		plot(false),
@@ -33,6 +33,11 @@ public:
 		iSmp = 0;
 	}
 
+	void loop()
+	{
+		breathe();
+	}
+
 	// Config
 	static const uint cSmp = 43;
 	static constexpr double maxBrightness = .3;
@@ -47,33 +52,86 @@ public:
 
 	static const uint msPerBeat = 35;
 	uint msLastBeat = 0;
-	void loop()
+
+	void debugXYZ()
 	{
 		float x = dmap(input.AnalogRead(A20), 0, 1, -120, 120);
 		float y = dmap(input.AnalogRead(A19), 0, 1, 0, 240);
 		float z = dmap(input.AnalogRead(A18), 0, 1, -120, 120);
+		strip.globalAxis(5, x, y, z, 23, Colr::Red);
+	}
 
-		//strip.rainbowFace(0);
+	bool fUp = true;
+	bool fWasGap = false;
+	void breathe()
+	{
+	//	const uint totalTime = 8174; // 6th octave below schumann
+	//	const uint duration = 6539;
+		const uint totalTime = input.AnalogReadInt(A20, 6) << 5; // 6th octave below schumann
+		const uint duration = totalTime;
 
-//strip.rainbowFace(0);
-		strip.globalAxis(5, x, y, z, 23);
-		return;
-		//strip.rainbowFace(0);
-/*
-		strip.rainbowFaceLinear(5,
-			input.AnalogRead(A20),
-			input.AnalogRead(A19));*/
-/*
-		strip.show();
+	//	float hue = input.AnalogRead(A20);
+		float brightness = input.AnalogRead(A18);
+		uint hueDuration = input.AnalogReadInt(A19, 6) << 5;
 
-		plot.x = x;
-	//	plot.w = w;
-		plot.plot();
-		delay(2.5);
-		return;*/
+		float maxY = 233;
+		float width = 200;//dmap(input.AnalogRead(A18), 0, 1, 100, 400);
+
+	//	log << "20:" << hueDuration << ", 19: " << brightness << "\n";
+
+		uint millisHue = millis % hueDuration;
+		float hue = millisHue / (float)hueDuration;
+
+		uint phase = millis % totalTime;
+
+		uint modShared = hueDuration * totalTime;
+		if (millis > modShared)
+			millis -= modShared;
+
+		log
+			<< "dur: " << totalTime
+			<< ", hueDur: " << hueDuration
+			<< ", time: " << millis
+			<< ", phase: " << phase
+			<< ", hue: " << millisHue
+			<< ", shared: " << modShared
+			<< "\n";
+
+		float height = 10000;
+		if (phase < duration)
+		{
+			if (fWasGap)
+			{
+				//fUp = !fUp;
+				fWasGap = false;
+			}
+			float fr = phase / (double)duration;
+			if (!fUp)
+				fr = 1 - fr;
+			float theta = mapfr(fr, -PI/2, PI/2);
+			height = dmap(sin(theta), -1, 1, -width, maxY+width);
+		}
+		else
+			fWasGap = true;
+
+bool isLoud;
+		//brightness *= readAudio(isLoud);
+		strip.globalAxis(0, 500, height, 500, width, Colr::Hue(hue)*brightness);
+		delay(10);
 
 
+		/*
+		Math.easeOutCubic =
 
+		function (t, b, c, d) {
+			/*t /= d;
+			t--;
+			return c*(t*t*t + 1) + b;
+		};*/
+	}
+
+	float readAudio(bool& isLoud)
+	{
 		double energy = audio.ReadEnergy(10);
 		Statistic stats;
 		for (uint i = 0; i < cSmp; ++i)
@@ -96,7 +154,7 @@ public:
 
 		bool isBeat = true;
 
-		bool isLoud = energy > threshold;
+		isLoud = energy > threshold;
 		bool wasBeat = (millis - msLastBeat) < msPerBeat;
 
 		if (!wasBeat)
@@ -113,11 +171,16 @@ public:
 		plot.smoothed = isBeat ? .1 : 0;
 		plot.plot();
 
-		double light = dmap(energy,
+		return  dmap(energy,
 			avg - (plot.smoothed - avg),
 			plot.smoothed,
 			.2, 1);
+	}
 
+	void displayAudio()
+	{
+		bool isLoud;
+		float light = readAudio(isLoud);
 		LightStrip(light, isLoud);
 	}
 

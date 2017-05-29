@@ -32,6 +32,7 @@ double clamp(double v, double min, double max);
 double saturate(double v);
 double frac(double v);
 double dmap(double val, double fMin, double fMax, double tMin, double tMax);
+double mapfr(double val, double min, double max);
 
 ubyte lerp(ubyte a, ubyte b, float fr);
 

@@ -29,6 +29,11 @@ double dmap(double val, double fMin, double fMax, double tMin, double tMax)
 	  tMin, tMax);
 }
 
+double mapfr(double val, double min, double max)
+{
+	return dmap(val, 0, 1, min, max);
+}
+
 ubyte lerp(ubyte a, ubyte b, float fr)
 {
 	  return (b - a) * fr + a;

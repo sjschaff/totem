@@ -19,7 +19,9 @@
 Input::Input(uint bitsPrecision) :
 	bitsPrecision(bitsPrecision),
 	ratio(1.0 / ((1<<bitsPrecision) - 1))
-{}
+{
+	//analogReference(0);//EXTERNAL);
+}
 
 uint Input::AnalogReadInt(uint pin, uint bitsPrecision)
 {

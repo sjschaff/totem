@@ -8,8 +8,6 @@
 
 const ushort LedStrip::cLED = 195;
 
-#define ForEachLed(var) for (uint var = 0; var < cLED; ++var)
-
 namespace StripBuilder
 {
 	const ushort outer[] = { 4, 5, 6, 7, 15, 14, 0, 1, 2, 3 };
@@ -216,11 +214,12 @@ void LedStrip::rainbowFaceLinear(uint iFace, float offs, float polarOffs)
 	}
 }
 
-ubyte FrForAxis(float val, float offs, float width)
+float FrForAxis(float val, float offs, float width)
 {
 	float delta = abs(val - offs);
-	float fr = 1 - saturate(delta/width);
-	return fr*0x40;
+	float fr = saturate(delta/width);
+	fr = dmap(cos(mapfr(fr, 0, PI)), -1, 1, 0, 1);
+	return fr;
 }
 
 void print(vec3 v)
@@ -234,16 +233,14 @@ void print(vec3 v)
 	Log::log->print(">, ");
 }
 
-void LedStrip::globalAxis(uint iFace, float x, float y, float z, float width)
+void LedStrip::globalAxis(uint iFace, float x, float y, float z, float width, Colr colr)
 {
 	ForEachLed(iLed) {
 		Led led = leds[iLed];
-		Colr colr = Colr(
-			FrForAxis(led.zpt.x, x, width),
-			FrForAxis(led.zpt.y, y, width),
-			FrForAxis(led.zpt.z, z, width));
+		Colr colrr = colr *
+			FrForAxis(led.zpt.y, y, width);
 
-		setColor(iLed, colr);
+		setColor(iLed, colrr);
 	}
 
 	show();

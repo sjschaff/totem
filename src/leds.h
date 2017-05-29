@@ -4,6 +4,8 @@
 #include <Adafruit_NeoPixel.h>
 #include "colr.h"
 
+#define ForEachLed(var) for (uint var = 0; var < cLED; ++var)
+
 struct Led
 {
 	uint iFace;
@@ -24,7 +26,7 @@ public:
 	// TODO Make useful
 	static const ushort cLED;
 
-private:
+public:
 	Adafruit_NeoPixel strip;
 	const Led* const leds;
 	void setColorNoGamma(ushort px, Colr colr);
@@ -39,7 +41,7 @@ public:
 
 	// color space tests
 	void setStripColor(Colr colr);
-	void globalAxis(uint face, float x, float y, float z, float w);
+	void globalAxis(uint face, float x, float y, float z, float w, Colr colr);
 	void rainbowFace(uint face);
 	void rainbowFaceLinear(uint face, float offs, float polarOffs);
 };

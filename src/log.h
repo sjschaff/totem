@@ -26,6 +26,8 @@ public:
 		if (enable)
 			Serial.println(t);
 	}
+
+	template<class T> inline Log &operator <<(T arg) { print(arg); return *this; }
 };
 
 #endif
