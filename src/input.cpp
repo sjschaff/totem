@@ -33,3 +33,22 @@ double Input::AnalogRead(uint pin)
 {
 	return analogRead(pin) * ratio;
 }
+
+uint _pin;
+btnPressHandler _handler;
+void* _data;
+// TODO: Multi pin blech
+void handlerProxy()
+{
+	_handler(_data);
+}
+
+void Input::attachBtnPressHandler(uint pin, btnPressHandler handler, void* data)
+{
+
+	//attachInterrupt(digitalPinToInterrupt(pin), ISR, mode);	(recommended)
+	_pin = pin;
+	_handler = handler;
+	_data = data;
+	attachInterrupt(digitalPinToInterrupt(pin), handlerProxy, RISING);
+}

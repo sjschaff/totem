@@ -3,6 +3,8 @@
 
 #include "util.h"
 
+typedef void (*btnPressHandler)(void* data);
+
 class Input
 {
 private:
@@ -14,6 +16,8 @@ public:
 
 	uint AnalogReadInt(uint pin, uint bitsPrecision);
 	double AnalogRead(uint pin);
+
+	void attachBtnPressHandler(uint pin, btnPressHandler handler, void* data);
 };
 
 #endif

@@ -6,6 +6,13 @@
 #include "plot.h"
 #include "log.h"
 
+volatile bool fRed = false;
+
+void toggleRed(void* data)
+{
+	fRed = !fRed;
+}
+
 class Totem
 {
 public:
@@ -20,7 +27,7 @@ public:
 		audio(),
 		input(16),
 		plot(false),
-		log(true)
+		log(false)
 	{
 		setup();
 	}
@@ -31,6 +38,9 @@ public:
 			samples[i] = 0;
 
 		iSmp = 0;
+
+		pinMode(21, INPUT_PULLUP);
+		input.attachBtnPressHandler(21, toggleRed, nullptr);
 	}
 
 	void loop()
@@ -71,7 +81,7 @@ public:
 		const uint duration = totalTime;
 
 	//	float hue = input.AnalogRead(A20);
-		float brightness = input.AnalogRead(A18);
+		float brightness = .5;//input.AnalogRead(A18);
 		uint hueDuration = input.AnalogReadInt(A19, 6) << 5;
 
 		float maxY = 233;
@@ -115,8 +125,17 @@ public:
 			fWasGap = true;
 
 bool isLoud;
+		Colr colr;
+		if (!fRed)//digitalRead(21))
+			//colr = Colr::Hue(hue);
+			colr = Colr::Blue;
+		else
+			colr = Colr::Red;
+
 		//brightness *= readAudio(isLoud);
-		strip.globalAxis(0, 500, height, 500, width, Colr::Hue(hue)*brightness);
+		strip.globalAxis(0, 500,
+			100,//height,
+			500, width, colr*brightness);
 		delay(10);
 
 
