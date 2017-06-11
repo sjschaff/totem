@@ -23,17 +23,17 @@ typedef uint16 ushort;
 #define PI 3.141592
 #endif
 
-// TODO doubles
+// TODO floats
 // TODO we should prob just use a gamma table
-ubyte gamma(ubyte v);
+float gamma(float v);
 
 // TODO Template
-double clamp(double v, double min, double max);
-double saturate(double v);
-double frac(double v);
-double dmap(double val, double fMin, double fMax, double tMin, double tMax);
-double mapfr(double val, double min, double max);
+float clamp(float v, float min, float max);
+float saturate(float v);
+float frac(float v);
+float dmap(float val, float fMin, float fMax, float tMin, float tMax);
+float mapfr(float val, float min, float max);
 
-ubyte lerp(ubyte a, ubyte b, float fr);
+float lerp(float a, float b, float fr);
 
 #endif

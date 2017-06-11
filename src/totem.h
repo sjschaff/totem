@@ -6,6 +6,18 @@
 #include "plot.h"
 #include "log.h"
 
+
+// TODO
+/*
+
+	-weird pulsing on spinner (see at .5 rps, probably error in polar coords?)
+	-polar delta (for AA) for tip leds
+	-incorporate mseq ic
+	-animation overlay system (sep. color from animation)
+	-figure out coil whine amps
+	-better time mod system
+*/
+
 volatile bool fRed = false;
 
 void toggleRed(void* data)
@@ -27,7 +39,7 @@ public:
 		audio(),
 		input(16),
 		plot(false),
-		log(false)
+		log(true)
 	{
 		setup();
 	}
@@ -41,11 +53,43 @@ public:
 
 		pinMode(21, INPUT_PULLUP);
 		input.attachBtnPressHandler(21, toggleRed, nullptr);
+
+		pinMode(15, OUTPUT);
+		pinMode(14, OUTPUT);
 	}
 
 	void loop()
 	{
-		breathe();
+		spin();
+		//return;
+		// read from 19
+		// strobe on 15
+		// reset on 14
+
+		const int strobe = 14;
+		const int reset = 15;
+		digitalWrite(strobe, LOW);
+		digitalWrite(reset, HIGH);
+		delayMicroseconds(1);
+		digitalWrite(reset, LOW);
+
+		uint values[7];
+		for (int i = 0; i < 7; ++i)
+		{
+			digitalWrite(strobe, HIGH);
+			delayMicroseconds(40);
+			digitalWrite(strobe, LOW);
+			delayMicroseconds(20);
+			values[i] = input.AnalogReadInt(A22, 16);//10);
+			delayMicroseconds(20);
+		}
+
+		for (int i = 0; i < 7; ++i)
+			log << values[i] << ", ";
+		log << "\n";
+	//	delay(500);
+
+		//breathe();
 	}
 
 	// Config
@@ -62,6 +106,25 @@ public:
 
 	static const uint msPerBeat = 35;
 	uint msLastBeat = 0;
+
+	void spin()
+	{
+		const float colPerSec = .05;
+		const uint loopMod = 30000;
+		if (millis > loopMod)
+			millis -= loopMod;
+		float frCol = millis * .001 * colPerSec;
+		frCol = frac(frCol);
+		Colr colr = Colr::Hue(frCol)
+			//Colr(1,1,1)
+			*.4
+			;
+		Colr colCenter = Colr::Hue(frac(frCol+5))
+			*.4
+			;
+		strip.spinStrip(colr, colCenter, millis, 1.5);
+		delay(16);
+	}
 
 	void debugXYZ()
 	{

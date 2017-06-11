@@ -7,12 +7,12 @@
 class Audio
 {//-mfpu=fpv4-sp-d16
 private:
-	AudioInputAnalog         adc;
+	//AudioInputAnalog         adc;
 //	AudioFilterStateVariable lowpass;
-	AudioAnalyzeFFT1024      fft1024;
-	//AudioFilterBiquad        biquad;
+	//AudioAnalyzeFFT1024      fft1024;
+//	AudioFilterBiquad        biquad;
 //	AudioAnalyzePeak         peak;
-	AudioConnection          patchCord1;
+	//AudioConnection          patchCord1;
 //	AudioConnection          patchCord2;
 
 public:

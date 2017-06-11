@@ -15,17 +15,16 @@ struct Colr
 	static const Colr Black;
 	static const Colr White;
 
-	ubyte r;
-	ubyte g;
-	ubyte b;
+	float r;
+	float g;
+	float b;
 
 	Colr();
-	Colr(byte grey);
-	Colr(ubyte r, ubyte g, ubyte b);
+	Colr(float grey);
+	Colr(float r, float g, float b);
 
-	Colr operator*(double v) const;
-	void operator*=(double v);
-	Colr operator*(ubyte v) const;
+	Colr operator*(float v) const;
+	void operator*=(float v);
 
 	Colr gammaCorrect();
 

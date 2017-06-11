@@ -7,8 +7,8 @@
 
 #include "audio.h"
 
-Audio::Audio() :
-	patchCord1(adc, fft1024)
+Audio::Audio() //:
+	//patchCord1(adc, fft1024)
 //	patchCord2(lowpass, fft1024)
 {
 	//biquad.setLowpass(0, 250, 1);
@@ -34,7 +34,7 @@ double Audio::ReadPeakToPeak()
 
 double Audio::ReadEnergy(uint maxBin)
 {
-	while (!fft1024.available()); // Skip every other (1/2 overlap)
+	/*while (!fft1024.available()); // Skip every other (1/2 overlap)
 	// TODO: combine? despite 50% overlap?
 	while (!fft1024.available());
 
@@ -45,7 +45,7 @@ double Audio::ReadEnergy(uint maxBin)
 		energy += bin;
 		// TODO nead squaring?doubling for 512 -> 1024
 		//*100;//bin;
-	}
+	}*/
 
-	return energy;
+	return 1;//energy;
 }

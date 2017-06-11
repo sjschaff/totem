@@ -37,7 +37,7 @@ public:
 	void setColor(ushort px, Colr colr);
 	void show();
 
-	void spinStrip(Colr colr, ulong time);
+	void spinStrip(Colr colr, Colr colrCenter, ulong time, float revsPerSec);
 
 	// color space tests
 	void setStripColor(Colr colr);

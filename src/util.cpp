@@ -1,11 +1,11 @@
 #include "util.h"
 
-ubyte gamma(ubyte v)
+float gamma(float v)
 {
-  return (ubyte)(pow(v/255.0, 2.2) * 255);
+  return pow(v, 2.2);
 }
 
-double clamp(double v, double min, double max)
+float clamp(float v, float min, float max)
 {
   if (v < min) return min;
   else if (v > max) return max;
@@ -13,28 +13,28 @@ double clamp(double v, double min, double max)
 }
 
 // TODO Template
-double saturate(double v) { return clamp(v, 0, 1); }
+float saturate(float v) { return clamp(v, 0, 1); }
 
-double frac(double v)
+float frac(float v)
 {
   double intpart;
   return modf(v, &intpart);
 }
 
 // TODO Template
-double dmap(double val, double fMin, double fMax, double tMin, double tMax)
+float dmap(float val, float fMin, float fMax, float tMin, float tMax)
 {
   return clamp(
 	  ((val - fMin) / (fMax - fMin)) * (tMax - tMin) + tMin,
 	  tMin, tMax);
 }
 
-double mapfr(double val, double min, double max)
+float mapfr(float val, float min, float max)
 {
 	return dmap(val, 0, 1, min, max);
 }
 
-ubyte lerp(ubyte a, ubyte b, float fr)
+float lerp(float a, float b, float fr)
 {
 	  return (b - a) * fr + a;
 }

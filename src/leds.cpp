@@ -98,6 +98,7 @@ namespace StripBuilder
 	{
 		Led led;
 		led.iFace = 0;
+		led.iRing = iRing;
 		led.polarDelta = polarDeltas[iRing] * 2 * PI;
 		led.polarFace = iPolar * led.polarDelta + PI/2;
 		if (iRing > 2)
@@ -176,7 +177,7 @@ LedStrip::LedStrip(ushort pin) :
 
 void LedStrip::setColorNoGamma(ushort px, Colr colr)
 {
-	strip.setPixelColor(px, colr.r, colr.g, colr.b);
+	strip.setPixelColor(px, (ubyte)(colr.r*255), (ubyte)(colr.g*255), (ubyte)(colr.b*255));
 }
 
 void LedStrip::setColor(ushort px, Colr colr)
@@ -189,8 +190,8 @@ void LedStrip::show() { strip.show(); }
 void LedStrip::setStripColor(Colr colr)
 {
 	colr = colr.gammaCorrect();
-	for (ushort i = 0; i < cLED; ++i)
-		setColorNoGamma(i, colr);
+	ForEachLed(iLed)
+		setColorNoGamma(iLed, colr);
 	strip.show();
 }
 

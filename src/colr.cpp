@@ -1,29 +1,24 @@
 #include "colr.h"
 
-const Colr Colr::Red = Colr(0xFF, 0, 0);
-const Colr Colr::Yellow = Colr(0xFF, 0xFF, 0);
-const Colr Colr::Green = Colr(0, 0xFF, 0);
-const Colr Colr::Cyan = Colr(0, 0xFF, 0xFF);
-const Colr Colr::Blue = Colr(0, 0, 0xFF);
-const Colr Colr::Purple = Colr(0xFF, 0, 0xFF);
+const Colr Colr::Red = Colr(1, 0, 0);
+const Colr Colr::Yellow = Colr(1, 1, 0);
+const Colr Colr::Green = Colr(0, 1, 0);
+const Colr Colr::Cyan = Colr(0, 1, 1);
+const Colr Colr::Blue = Colr(0, 0, 1);
+const Colr Colr::Purple = Colr(1, 0, 1);
 const Colr Colr::Black = Colr(0);
-const Colr Colr::White = Colr(0xFF);
+const Colr Colr::White = Colr(1);
 
 Colr::Colr() : r(0), g(0), b(0) {}
-Colr::Colr(ubyte grey) : r(grey), g(grey), b(grey) {}
-Colr::Colr(ubyte r, ubyte g, ubyte b) : r(r), g(g), b(b) {}
+Colr::Colr(float grey) : r(grey), g(grey), b(grey) {}
+Colr::Colr(float r, float g, float b) : r(r), g(g), b(b) {}
 
-Colr Colr::operator*(double v) const
+Colr Colr::operator*(float v) const
 {
 	return Colr(r*v, g*v, b*v);
 }
 
-Colr Colr::operator*(byte v) const
-{
-	return (*this)*(v/255.0);
-}
-
-void Colr::operator*=(double v)
+void Colr::operator*=(float v)
 {
 	*this = *this * v;
 }
