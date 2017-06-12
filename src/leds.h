@@ -4,35 +4,20 @@
 #include <Adafruit_NeoPixel.h>
 #include "colr.h"
 
-#define ForEachLed(var) for (uint var = 0; var < cLED; ++var)
-
-struct Led
-{
-	uint iFace;
-	uint iRing;
-	float polarFace;
-
-	// computed from iRad
-	float polarDelta; // ex. duPixel
-	float radFace;
-
-	vec2 ptFace;
-	vec3 zpt;
-};
+struct Led;
 
 class LedStrip
 {
-public:
-	// TODO Make useful
+private:
 	static const ushort cLED;
 
-public:
 	Adafruit_NeoPixel strip;
 	const Led* const leds;
+	static Led* GenerateLeds();
 	void setColorNoGamma(ushort px, Colr colr);
 
 public:
-	LedStrip(ushort pin);
+	LedStrip();
 
 	void setColor(ushort px, Colr colr);
 	void show();

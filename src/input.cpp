@@ -17,11 +17,45 @@
 	A22: ADC1
  */
 
-Input::Input(uint bitsPrecision) :
-	bitsPrecision(bitsPrecision),
-	ratio(1.0 / ((1<<bitsPrecision) - 1))
+ static Input* inputGlobal = nullptr;
+
+ #define DeclHandler(id) static volatile bool fPressed##id = false; void handle##id() { fPressed##id = true; }
+
+ DeclHandler(A);
+ DeclHandler(B);
+ DeclHandler(C);
+ DeclHandler(D);
+ DeclHandler(E);
+ DeclHandler(F);
+
+ #define SetupBtn(pin, id) \
+ 	pinMode(pin, INPUT_PULLUP); \
+ 	attachInterrupt(digitalPinToInterrupt(pin), handle##id, RISING);
+
+#define CheckBtn(id) if (fPressed##id) { btnHandler->OnPress##id(); fPressed##id = false; }
+
+void Input::PollInput()
 {
-	//analogReference(0);//EXTERNAL);
+	CheckBtn(A);
+	CheckBtn(B);
+	CheckBtn(C);
+	CheckBtn(D);
+	CheckBtn(E);
+	CheckBtn(F);
+}
+
+Input::Input(BtnHandler* btnHandler) :
+	bitsPrecision(10),
+	ratio(1.0 / ((1<<bitsPrecision) - 1)),
+	btnHandler(btnHandler)
+{
+	inputGlobal = this;
+	SetupBtn(22, A);
+	SetupBtn(21, B);
+	SetupBtn(20, E);
+	SetupBtn(19, C);
+	SetupBtn(18, F);
+	SetupBtn(17, D);
 }
 
 uint Input::AnalogReadInt(uint pin, uint bitsPrecision)
@@ -30,53 +64,11 @@ uint Input::AnalogReadInt(uint pin, uint bitsPrecision)
 	return analogRead(pin) >> bitsOffset;
 }
 
-double Input::AnalogRead(uint pin)
+float Input::AnalogRead(uint pin)
 {
 	return analogRead(pin) * ratio;
 }
 
-uint _pin;
-btnPressHandler _handler;
-void* _data;
-// TODO: Multi pin blech
-void handlerProxy()
-{
-	_handler(_data);
-}
-
-void handleBtn(uint pin)
-{
-	*Log::log << "pin " << pin << "\n";
-}
-
-#define DeclHandler(pin) void handle##pin() { handleBtn(pin); }
-
-//void handle21() { handleBtn(21); }
-DeclHandler(22);
-DeclHandler(21);
-DeclHandler(20);
-DeclHandler(19);
-DeclHandler(18);
-DeclHandler(17);
-
-void Input::attachBtnPressHandler(uint pin, btnPressHandler handler, void* data)
-{
-	pinMode(22, INPUT_PULLUP);
-	pinMode(21, INPUT_PULLUP);
-	pinMode(20, INPUT_PULLUP);
-	pinMode(19, INPUT_PULLUP);
-	pinMode(18, INPUT_PULLUP);
-	pinMode(17, INPUT_PULLUP);
-	attachInterrupt(digitalPinToInterrupt(22), handle22, RISING);
-	attachInterrupt(digitalPinToInterrupt(21), handle21, RISING);
-	attachInterrupt(digitalPinToInterrupt(20), handle20, RISING);
-	attachInterrupt(digitalPinToInterrupt(19), handle19, RISING);
-	attachInterrupt(digitalPinToInterrupt(18), handle18, RISING);
-	attachInterrupt(digitalPinToInterrupt(17), handle17, RISING);
-
-	/*pinMode(pin, INPUT_PULLUP);
-	_pin = pin;
-	_handler = handler;
-	_data = data;
-	attachInterrupt(digitalPinToInterrupt(pin), handlerProxy, RISING);*/
-}
+float Input::ReadA() { return AnalogRead(A20); }
+float Input::ReadB() { return AnalogRead(A19); }
+float Input::ReadC() { return AnalogRead(A18); }

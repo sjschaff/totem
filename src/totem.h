@@ -6,10 +6,8 @@
 #include "plot.h"
 #include "log.h"
 
-
 // TODO
 /*
-
 	-weird pulsing on spinner (see at .5 rps, probably error in polar coords?)
 	-polar delta (for AA) for tip leds
 	-incorporate mseq ic
@@ -18,77 +16,44 @@
 	-better time mod system
 */
 
-volatile bool fRed = false;
-
-void toggleRed(void* data)
-{
-	fRed = !fRed;
-}
-
-class Totem
+class Totem : public BtnHandler
 {
 public:
+	Log log;
+	Plot plot;
+
+	Input input;
 	LedStrip strip;
 	Audio audio;
-	Input input;
-	Plot plot;
-	Log log;
+
+	void OnPressA() {OnPress('A');}
+	void OnPressB() {OnPress('B');}
+	void OnPressC() {OnPress('C');}
+	void OnPressD() {OnPress('D');}
+	void OnPressE() {OnPress('E');}
+	void OnPressF() {OnPress('F');}
 
 	Totem() :
-		strip(23),
-		audio(),
-		input(10),//16),
-		plot(false),
-		log(true)
+		log(true), plot(false),
+		input(this), audio(input)
 	{
-		setup();
-	}
-
-	void setup()
-	{
+		iSmp = 0;
 		for (uint i = 0; i < cSmp; ++i)
 			samples[i] = 0;
+	}
 
-		iSmp = 0;
-
-		//pinMode(21, INPUT_PULLUP);
-		input.attachBtnPressHandler(21, toggleRed, nullptr);
-
-		pinMode(15, OUTPUT);
-		pinMode(14, OUTPUT);
+	void OnPress(char c)
+	{
+		log << "Button " << c << " Pressed. ["
+			<< input.ReadA() << ", "
+			<< input.ReadB() << ", "
+			<< input.ReadC() << "].\n";
 	}
 
 	void loop()
 	{
+		input.PollInput();
 		spin();
-		//return;
-		// read from 19
-		// strobe on 15
-		// reset on 14
-
-		const int strobe = 14;
-		const int reset = 15;
-		digitalWrite(strobe, LOW);
-		digitalWrite(reset, HIGH);
-		delayMicroseconds(1);
-		digitalWrite(reset, LOW);
-
-		uint values[7];
-		for (int i = 0; i < 7; ++i)
-		{
-			digitalWrite(strobe, HIGH);
-			delayMicroseconds(40);
-			digitalWrite(strobe, LOW);
-			delayMicroseconds(20);
-			values[i] = input.AnalogReadInt(A22, 16);//10);
-			delayMicroseconds(20);
-		}
-
-	/*	for (int i = 0; i < 7; ++i)
-			log << values[i] << ", ";
-		log << "\n";
-	*///	delay(500);
-
 		//breathe();
 	}
 
@@ -124,17 +89,17 @@ public:
 			;
 		strip.spinStrip(colr, colCenter, millis, 1.5);
 		delay(16);
-		log
+		/*log
 			<< input.AnalogRead(A20) << ", "
 			<< input.AnalogRead(A19) << ", "
-			<< input.AnalogRead(A18) << "\n";
+			<< input.AnalogRead(A18) << "\n";*/
 	}
 
 	void debugXYZ()
 	{
-		float x = dmap(input.AnalogRead(A20), 0, 1, -120, 120);
-		float y = dmap(input.AnalogRead(A19), 0, 1, 0, 240);
-		float z = dmap(input.AnalogRead(A18), 0, 1, -120, 120);
+		float x = dmap(input.ReadA(), 0, 1, -120, 120);
+		float y = dmap(input.ReadB(), 0, 1, 0, 240);
+		float z = dmap(input.ReadC(), 0, 1, -120, 120);
 		strip.globalAxis(5, x, y, z, 23, Colr::Red);
 	}
 
@@ -192,12 +157,9 @@ public:
 			fWasGap = true;
 
 bool isLoud;
-		Colr colr;
-		if (!fRed)//digitalRead(21))
+		Colr colr;//digitalRead(21))
 			//colr = Colr::Hue(hue);
 			colr = Colr::Blue;
-		else
-			colr = Colr::Red;
 
 		//brightness *= readAudio(isLoud);
 		strip.globalAxis(0, 500,

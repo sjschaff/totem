@@ -3,12 +3,6 @@
 
 #include <Arduino.h>
 
-//#include <glm/glm.hpp>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-
-using namespace glm;
-
 typedef uint8_t uint8;
 typedef uint16_t uint16;
 typedef uint32_t uint32;
@@ -22,6 +16,14 @@ typedef uint16 ushort;
 #ifndef PI
 #define PI 3.141592
 #endif
+
+constexpr float rads(float degs)
+{
+	return degs * PI / 180;
+}
+
+constexpr float dihedral = rads(116.5650512);
+
 
 // TODO floats
 // TODO we should prob just use a gamma table

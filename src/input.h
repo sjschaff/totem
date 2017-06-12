@@ -3,7 +3,16 @@
 
 #include "util.h"
 
-typedef void (*btnPressHandler)(void* data);
+class BtnHandler
+{
+public:
+	virtual void OnPressA() = 0;
+	virtual void OnPressB() = 0;
+	virtual void OnPressC() = 0;
+	virtual void OnPressD() = 0;
+	virtual void OnPressE() = 0;
+	virtual void OnPressF() = 0;
+};
 
 class Input
 {
@@ -11,13 +20,19 @@ private:
 	const uint bitsPrecision;
 	const double ratio;
 
+	BtnHandler* btnHandler;
+	float AnalogRead(uint pin);
+
 public:
-	Input(uint bitsPrecision);
+	Input(BtnHandler* btnHandler);
+
+	void PollInput();
 
 	uint AnalogReadInt(uint pin, uint bitsPrecision);
-	double AnalogRead(uint pin);
 
-	void attachBtnPressHandler(uint pin, btnPressHandler handler, void* data);
+	float ReadA();
+	float ReadB();
+	float ReadC();
 };
 
 #endif

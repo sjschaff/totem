@@ -3,10 +3,12 @@
 
 #include <Audio.h>
 #include <Wire.h>
+#include "input.h"
 
 class Audio
 {//-mfpu=fpv4-sp-d16
 private:
+	Input& input;
 	//AudioInputAnalog         adc;
 //	AudioFilterStateVariable lowpass;
 	//AudioAnalyzeFFT1024      fft1024;
@@ -14,9 +16,10 @@ private:
 //	AudioAnalyzePeak         peak;
 	//AudioConnection          patchCord1;
 //	AudioConnection          patchCord2;
-
+	void ReadAudioValues();
+	
 public:
-	Audio();
+	Audio(Input& input);
 
 	double ReadPeak();
 	double ReadPeakToPeak();

@@ -1,4 +1,5 @@
 #include "leds.h"
+#include "util/stripbuilder.h"
 
 float Tail(float head, float led, float len, float headLen)
 {
