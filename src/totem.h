@@ -37,7 +37,7 @@ public:
 	Totem() :
 		strip(23),
 		audio(),
-		input(16),
+		input(10),//16),
 		plot(false),
 		log(true)
 	{
@@ -51,7 +51,7 @@ public:
 
 		iSmp = 0;
 
-		pinMode(21, INPUT_PULLUP);
+		//pinMode(21, INPUT_PULLUP);
 		input.attachBtnPressHandler(21, toggleRed, nullptr);
 
 		pinMode(15, OUTPUT);
@@ -84,10 +84,10 @@ public:
 			delayMicroseconds(20);
 		}
 
-		for (int i = 0; i < 7; ++i)
+	/*	for (int i = 0; i < 7; ++i)
 			log << values[i] << ", ";
 		log << "\n";
-	//	delay(500);
+	*///	delay(500);
 
 		//breathe();
 	}
@@ -124,6 +124,10 @@ public:
 			;
 		strip.spinStrip(colr, colCenter, millis, 1.5);
 		delay(16);
+		log
+			<< input.AnalogRead(A20) << ", "
+			<< input.AnalogRead(A19) << ", "
+			<< input.AnalogRead(A18) << "\n";
 	}
 
 	void debugXYZ()

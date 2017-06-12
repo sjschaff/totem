@@ -1,4 +1,5 @@
 #include "input.h"
+#include "log.h"
 
 // TODO Static assert don't use ADC0
 // TODO Verify if dual adc ports can be used
@@ -43,12 +44,39 @@ void handlerProxy()
 	_handler(_data);
 }
 
+void handleBtn(uint pin)
+{
+	*Log::log << "pin " << pin << "\n";
+}
+
+#define DeclHandler(pin) void handle##pin() { handleBtn(pin); }
+
+//void handle21() { handleBtn(21); }
+DeclHandler(22);
+DeclHandler(21);
+DeclHandler(20);
+DeclHandler(19);
+DeclHandler(18);
+DeclHandler(17);
+
 void Input::attachBtnPressHandler(uint pin, btnPressHandler handler, void* data)
 {
+	pinMode(22, INPUT_PULLUP);
+	pinMode(21, INPUT_PULLUP);
+	pinMode(20, INPUT_PULLUP);
+	pinMode(19, INPUT_PULLUP);
+	pinMode(18, INPUT_PULLUP);
+	pinMode(17, INPUT_PULLUP);
+	attachInterrupt(digitalPinToInterrupt(22), handle22, RISING);
+	attachInterrupt(digitalPinToInterrupt(21), handle21, RISING);
+	attachInterrupt(digitalPinToInterrupt(20), handle20, RISING);
+	attachInterrupt(digitalPinToInterrupt(19), handle19, RISING);
+	attachInterrupt(digitalPinToInterrupt(18), handle18, RISING);
+	attachInterrupt(digitalPinToInterrupt(17), handle17, RISING);
 
-	//attachInterrupt(digitalPinToInterrupt(pin), ISR, mode);	(recommended)
+	/*pinMode(pin, INPUT_PULLUP);
 	_pin = pin;
 	_handler = handler;
 	_data = data;
-	attachInterrupt(digitalPinToInterrupt(pin), handlerProxy, RISING);
+	attachInterrupt(digitalPinToInterrupt(pin), handlerProxy, RISING);*/
 }
