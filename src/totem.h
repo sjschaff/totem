@@ -4,6 +4,7 @@
 #include "leds.h"
 #include "plot.h"
 #include "log.h"
+#include "anim/audiosimple.h"
 
 // TODO
 /*
@@ -25,6 +26,8 @@ public:
 	LedStrip strip;
 	Audio audio;
 
+	Mode* mode;
+
 	void OnPressA() {OnPress('A');}
 	void OnPressB() {OnPress('B');}
 	void OnPressC() {OnPress('C');}
@@ -35,7 +38,9 @@ public:
 	Totem() :
 		log(true), plot(true),
 		input(this), audio(input)
-	{ }
+	{
+		mode = new AudioSimple(strip);
+	}
 
 	void OnPress(char c)
 	{
@@ -45,19 +50,27 @@ public:
 			<< input.ReadC() << "].\n";
 	}
 
+	// State
+	elapsedMillis millis;
+
 	void loop()
 	{
 		input.PollInput();
 		strip.SetBrightness(input.ReadA(.2, .85)); // TODO make anims more sparing with simultaneous lit leds
+
+			//uint dec = (uint)input.ReadC(1, 10);
+			//plot.knobC = dec;
+			//	audio.SetDecay(dec);
+
+		bool isLoud;
+		float energy = audio.GetEnergy(isLoud, &plot);
+		mode->Update(millis, energy, isLoud);
+		delay(23); // TODO?
+
 		//spin();
-		displayAudio();
+		//displayAudio();
 		//breathe();
 	}
-
-	// State
-	uint frame = 0;
-	bool wasLoud = false;
-	elapsedMillis millis;
 
 	void spin()
 	{
@@ -154,44 +167,4 @@ public:
 		};*/
 	}
 
-	void displayAudio()
-	{
-		uint dec = (uint)input.ReadC(1, 10);
-		plot.knobC = dec;
-	//	audio.SetDecay(dec);
-		bool isLoud;
-		float light = audio.GetEnergy(isLoud, &plot);
-		LightStrip(light, isLoud);
-		delay(23);
-	}
-
-	void LightStrip(double sound, bool isLoud)
-	{
-		if (isLoud)
-		{
-			//sound = 1;
-			if (!wasLoud)
-			{
-				frame = (frame + 1) % 3;
-				wasLoud = true;
-			}
-		}
-		else
-		{
-			//sound = 0;
-			wasLoud = false;
-		}
-
-	//	sound = 1;
-
-		Colr colr = frame == 0
-			? Colr::Red
-			: frame == 1
-				? Colr::Green
-				: Colr::Blue;
-//colr = Colr::Red;
-		colr *= sound;
-		//strip.spinStrip(colr, millis);
-		strip.SetStripColor(colr);
-	}
 };

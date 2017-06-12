@@ -131,7 +131,7 @@ float Audio::GetEnergy(bool& isLoud, Plot* _plot)
 	plot.smoothed = threshold;
 	plot.plot();
 
-	isLoud = false;
+	isLoud = isBeat;
 	return saturate((millis - msLastBeat) / (4.f*msPerBeat));
 	return dmap(energy,
 		avg - (smoothed - avg),
