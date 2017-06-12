@@ -24,22 +24,21 @@ Audio::Audio(Input& input) : input(input) //:
 	AudioMemory(10);*/
 }
 
-double Audio::ReadPeak()
+float Audio::ReadPeak()
 {
 /*	while (!peak.available());
 	return peak.read();*/
 	return 1;
 }
 
-double Audio::ReadPeakToPeak()
+float Audio::ReadPeakToPeak()
 {/*
 	while (!peak.available());
 	return peak.readPeakToPeak();*/
 	return 1;
 }
 
-// TODO: Return stuff
-void Audio::ReadAudioValues()
+uint Audio::ReadAudioValues(uint binStart, uint binEnd)
 {
 	digitalWrite(strobePin, LOW);
 	digitalWrite(resetPin, HIGH);
@@ -47,15 +46,21 @@ void Audio::ReadAudioValues()
 	digitalWrite(resetPin, LOW);
 
 	uint values[7];
-	for (int i = 0; i < 7; ++i)
+	uint value = 0;
+	for (uint i = 0; i < binEnd; ++i)
 	{
 		digitalWrite(strobePin, HIGH);
 		delayMicroseconds(40);
 		digitalWrite(strobePin, LOW);
 		delayMicroseconds(20);
 		values[i] = input.AnalogReadInt(A22, 10);
+		if (i >= binStart)
+			value += values[i];
+
 		delayMicroseconds(20);
 	}
+
+	return value;
 
 		/*	for (int i = 0; i < 7; ++i)
 				log << values[i] << ", ";
@@ -63,8 +68,12 @@ void Audio::ReadAudioValues()
 		*///	delay(500);
 }
 
-double Audio::ReadEnergy(uint maxBin)
+float Audio::ReadEnergy(uint maxBin)
 {
+//	IntervalTimer myTimer;
+return ReadAudioValues(0, 2);
+
+
 	/*while (!fft1024.available()); // Skip every other (1/2 overlap)
 	// TODO: combine? despite 50% overlap?
 	while (!fft1024.available());

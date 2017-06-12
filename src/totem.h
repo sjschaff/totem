@@ -54,13 +54,13 @@ public:
 	{
 		input.PollInput();
 		strip.SetBrightness(input.ReadA(.2, .85)); // TODO make anims more sparing with simultaneous lit leds
-		spin();
+		//spin();
+		displayAudio();
 		//breathe();
 	}
 
 	// Config
 	static const uint cSmp = 43;
-	static constexpr double maxBrightness = .3;
 
 	// State
 	uint frame = 0;
@@ -152,12 +152,10 @@ public:
 		else
 			fWasGap = true;
 
-bool isLoud;
 		Colr colr;//digitalRead(21))
 			//colr = Colr::Hue(hue);
 			colr = Colr::Blue;
 
-		//brightness *= readAudio(isLoud);
 		strip.GlobalAxis(0, 500,
 			100,//height,
 			500, width, colr);
@@ -215,7 +213,7 @@ bool isLoud;
 		plot.smoothed = isBeat ? .1 : 0;
 		plot.plot();
 
-		return  dmap(energy,
+		return dmap(energy,
 			avg - (plot.smoothed - avg),
 			plot.smoothed,
 			.2, 1);
@@ -226,6 +224,7 @@ bool isLoud;
 		bool isLoud;
 		float light = readAudio(isLoud);
 		LightStrip(light, isLoud);
+		delay(23);
 	}
 
 	void LightStrip(double sound, bool isLoud)
@@ -253,7 +252,7 @@ bool isLoud;
 				? Colr::Green
 				: Colr::Blue;
 //colr = Colr::Red;
-		colr *= sound * maxBrightness;
+		colr *= sound;
 		//strip.spinStrip(colr, millis);
 		strip.SetStripColor(colr);
 	}

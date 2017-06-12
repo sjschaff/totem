@@ -16,15 +16,17 @@ private:
 //	AudioAnalyzePeak         peak;
 	//AudioConnection          patchCord1;
 //	AudioConnection          patchCord2;
-	void ReadAudioValues();
-	
+	uint ReadAudioValues(uint binStart, uint binEnd);
+
+	IntervalTimer sampleTimer;
+
 public:
 	Audio(Input& input);
 
-	double ReadPeak();
-	double ReadPeakToPeak();
+	float ReadPeak();
+	float ReadPeakToPeak();
 
-	double ReadEnergy(uint maxBin); // Exclusive, to 512
+	float ReadEnergy(uint maxBin); // Exclusive, to 512
 };
 
 #endif
