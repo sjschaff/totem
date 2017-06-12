@@ -1,4 +1,3 @@
-#include <Statistic.h>
 #include "util.h"
 #include "audio.h"
 #include "input.h"
@@ -36,11 +35,7 @@ public:
 	Totem() :
 		log(true), plot(false),
 		input(this), audio(input)
-	{
-		iSmp = 0;
-		for (uint i = 0; i < cSmp; ++i)
-			samples[i] = 0;
-	}
+	{ }
 
 	void OnPress(char c)
 	{
@@ -59,19 +54,10 @@ public:
 		//breathe();
 	}
 
-	// Config
-	static const uint cSmp = 43;
-
 	// State
 	uint frame = 0;
 	bool wasLoud = false;
 	elapsedMillis millis;
-
-	uint iSmp;
-	double samples[cSmp];
-
-	static const uint msPerBeat = 35;
-	uint msLastBeat = 0;
 
 	void spin()
 	{
@@ -86,10 +72,6 @@ public:
 		Colr colCenter = Colr::Hue(frac(frCol+5));
 		strip.SpinStrip(colr, colCenter, millis, 1.5);
 		delay(16);
-		/*log
-			<< input.AnalogRead(A20) << ", "
-			<< input.AnalogRead(A19) << ", "
-			<< input.AnalogRead(A18) << "\n";*/
 	}
 
 	void debugXYZ()
@@ -172,57 +154,10 @@ public:
 		};*/
 	}
 
-	float readAudio(bool& isLoud)
-	{
-		double energy = audio.ReadEnergy(10);
-		Statistic stats;
-		for (uint i = 0; i < cSmp; ++i)
-			stats.add(samples[i]);
-		double avg = stats.average();
-
-		double variance = 0;
-		for (uint i = 0; i < cSmp; ++i)
-		{
-			double delta = samples[i] - avg;
-			variance += delta*delta;
-		}
-		variance /= 43.0;
-
-		double C = -.0025714 * variance + 1.5142857;
-		double threshold = avg * C;
-
-		samples[iSmp] = energy;
-		iSmp = (iSmp + 1) % 43;
-
-		bool isBeat = true;
-
-		isLoud = energy > threshold;
-		bool wasBeat = (millis - msLastBeat) < msPerBeat;
-
-		if (!wasBeat)
-		{
-			if (isLoud)
-				msLastBeat = millis;
-			else
-				isBeat = false;
-		}
-
-		plot.val = energy;
-		plot.avg = avg;
-		plot.std = variance;
-		plot.smoothed = isBeat ? .1 : 0;
-		plot.plot();
-
-		return dmap(energy,
-			avg - (plot.smoothed - avg),
-			plot.smoothed,
-			.2, 1);
-	}
-
 	void displayAudio()
 	{
 		bool isLoud;
-		float light = readAudio(isLoud);
+		float light = audio.GetEnergy(isLoud);
 		LightStrip(light, isLoud);
 		delay(23);
 	}

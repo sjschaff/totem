@@ -1,32 +1,24 @@
 #ifndef audio_h
 #define audio_h
 
-#include <Audio.h>
-#include <Wire.h>
 #include "input.h"
 
 class Audio
-{//-mfpu=fpv4-sp-d16
+{
 private:
 	Input& input;
-	//AudioInputAnalog         adc;
-//	AudioFilterStateVariable lowpass;
-	//AudioAnalyzeFFT1024      fft1024;
-//	AudioFilterBiquad        biquad;
-//	AudioAnalyzePeak         peak;
-	//AudioConnection          patchCord1;
-//	AudioConnection          patchCord2;
-	uint ReadAudioValues(uint binStart, uint binEnd);
 
 	IntervalTimer sampleTimer;
+	uint msLastBeat = 0;
+	elapsedMillis millis;
 
 public:
 	Audio(Input& input);
 
-	float ReadPeak();
-	float ReadPeakToPeak();
+	float GetEnergy(bool& isLoud);
 
-	float ReadEnergy(uint maxBin); // Exclusive, to 512
+// private:
+	uint ReadAudioValues(uint binStart, uint binEnd);
 };
 
 #endif
