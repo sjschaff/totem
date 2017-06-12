@@ -21,7 +21,7 @@ private:
 	const double ratio;
 
 	BtnHandler* btnHandler;
-	float AnalogRead(uint pin);
+	float AnalogRead(uint pin, float min, float max);
 
 public:
 	Input(BtnHandler* btnHandler);
@@ -30,9 +30,9 @@ public:
 
 	uint AnalogReadInt(uint pin, uint bitsPrecision);
 
-	float ReadA();
-	float ReadB();
-	float ReadC();
+	float ReadA(float min = 0, float max = 1);
+	float ReadB(float min = 0, float max = 1);
+	float ReadC(float min = 0, float max = 1);
 };
 
 #endif

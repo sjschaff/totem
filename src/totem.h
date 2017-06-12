@@ -53,6 +53,7 @@ public:
 	void loop()
 	{
 		input.PollInput();
+		strip.SetBrightness(input.ReadA(.2, .85)); // TODO make anims more sparing with simultaneous lit leds
 		spin();
 		//breathe();
 	}
@@ -80,14 +81,10 @@ public:
 			millis -= loopMod;
 		float frCol = millis * .001 * colPerSec;
 		frCol = frac(frCol);
-		Colr colr = Colr::Hue(frCol)
-			//Colr(1,1,1)
-			*.4
-			;
-		Colr colCenter = Colr::Hue(frac(frCol+5))
-			*.4
-			;
-		strip.spinStrip(colr, colCenter, millis, 1.5);
+		Colr colr = Colr::Hue(frCol);
+			//Colr(1,1,1);
+		Colr colCenter = Colr::Hue(frac(frCol+5));
+		strip.SpinStrip(colr, colCenter, millis, 1.5);
 		delay(16);
 		/*log
 			<< input.AnalogRead(A20) << ", "
@@ -100,7 +97,7 @@ public:
 		float x = dmap(input.ReadA(), 0, 1, -120, 120);
 		float y = dmap(input.ReadB(), 0, 1, 0, 240);
 		float z = dmap(input.ReadC(), 0, 1, -120, 120);
-		strip.globalAxis(5, x, y, z, 23, Colr::Red);
+		strip.GlobalAxis(5, x, y, z, 23, Colr::Red);
 	}
 
 	bool fUp = true;
@@ -113,7 +110,6 @@ public:
 		const uint duration = totalTime;
 
 	//	float hue = input.AnalogRead(A20);
-		float brightness = .5;//input.AnalogRead(A18);
 		uint hueDuration = input.AnalogReadInt(A19, 6) << 5;
 
 		float maxY = 233;
@@ -162,9 +158,9 @@ bool isLoud;
 			colr = Colr::Blue;
 
 		//brightness *= readAudio(isLoud);
-		strip.globalAxis(0, 500,
+		strip.GlobalAxis(0, 500,
 			100,//height,
-			500, width, colr*brightness);
+			500, width, colr);
 		delay(10);
 
 
@@ -259,6 +255,6 @@ bool isLoud;
 //colr = Colr::Red;
 		colr *= sound * maxBrightness;
 		//strip.spinStrip(colr, millis);
-		strip.setStripColor(colr);
+		strip.SetStripColor(colr);
 	}
 };

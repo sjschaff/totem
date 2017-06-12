@@ -6,7 +6,6 @@
 
 const ushort LedStrip::cLED = 195;
 
-
 static const uint ledPin = 23;
 
 LedStrip::LedStrip() :
@@ -16,36 +15,47 @@ LedStrip::LedStrip() :
 	pinMode(ledPin, OUTPUT);
 	strip.begin();
 	strip.show();
+	frBrightness = .5;
 }
 
-void LedStrip::setColorNoGamma(ushort px, Colr colr)
+void LedStrip::SetBrightness(float fr)
+{
+	frBrightness = fr;
+}
+
+void LedStrip::SetColorRaw(ushort px, Colr colr)
 {
 	strip.setPixelColor(px, (ubyte)(colr.r*255), (ubyte)(colr.g*255), (ubyte)(colr.b*255));
 }
 
-void LedStrip::setColor(ushort px, Colr colr)
+Colr LedStrip::ColrRawForColr(Colr colr)
 {
-	setColorNoGamma(px, colr.gammaCorrect());
+	return (colr * frBrightness).gammaCorrect();
 }
 
-void LedStrip::show() { strip.show(); }
-
-void LedStrip::setStripColor(Colr colr)
+void LedStrip::SetColor(ushort px, Colr colr)
 {
-	colr = colr.gammaCorrect();
+	SetColorRaw(px, ColrRawForColr(colr));
+}
+
+void LedStrip::Show() { strip.show(); }
+
+void LedStrip::SetStripColor(Colr colr)
+{
+	colr = ColrRawForColr(colr);
 	ForEachLed(iLed)
-		setColorNoGamma(iLed, colr);
-	strip.show();
+		SetColorRaw(iLed, colr);
+	Show();
 }
 
-void LedStrip::rainbowFace(uint iFace)
+void LedStrip::RainbowFace(uint iFace)
 {
 	ForEachLed(iLed)
-		setColor(iLed, Colr::Hue(leds[iLed].polarFace/(2*PI))*.4);
-	strip.show();
+		SetColor(iLed, Colr::Hue(leds[iLed].polarFace/(2*PI))*.4);
+	Show();
 }
 
-void LedStrip::rainbowFaceLinear(uint iFace, float offs, float polarOffs)
+void LedStrip::RainbowFaceLinear(uint iFace, float offs, float polarOffs)
 {
 	ForEachLed(iLed)
 	{
@@ -54,7 +64,7 @@ void LedStrip::rainbowFaceLinear(uint iFace, float offs, float polarOffs)
 		float x = cos(polar) * led.radFace;
 
 		float val = frac(dmap(x, -52, 52, 0, 1) + offs);
-		setColor(iLed, Colr::Hue(val)*.5);
+		SetColor(iLed, Colr::Hue(val)*.5);
 	}
 }
 
@@ -77,15 +87,15 @@ void print(vec3 v)
 	Log::log->print(">, ");
 }
 
-void LedStrip::globalAxis(uint iFace, float x, float y, float z, float width, Colr colr)
+void LedStrip::GlobalAxis(uint iFace, float x, float y, float z, float width, Colr colr)
 {
 	ForEachLed(iLed) {
 		Led led = leds[iLed];
 		Colr colrr = colr *
 			FrForAxis(led.zpt.y, y, width);
 
-		setColor(iLed, colrr);
+		SetColor(iLed, colrr);
 	}
 
-	show();
+	Show();
 }

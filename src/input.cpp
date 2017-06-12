@@ -64,11 +64,14 @@ uint Input::AnalogReadInt(uint pin, uint bitsPrecision)
 	return analogRead(pin) >> bitsOffset;
 }
 
-float Input::AnalogRead(uint pin)
+float Input::AnalogRead(uint pin, float min, float max)
 {
-	return analogRead(pin) * ratio;
+	return dmap(
+		analogRead(pin) * ratio,
+		0, 1,
+		min, max); // TODO condense into one range mapping
 }
 
-float Input::ReadA() { return AnalogRead(A20); }
-float Input::ReadB() { return AnalogRead(A19); }
-float Input::ReadC() { return AnalogRead(A18); }
+float Input::ReadA(float min, float max) { return AnalogRead(A20, min, max); }
+float Input::ReadB(float min, float max) { return AnalogRead(A19, min, max); }
+float Input::ReadC(float min, float max) { return AnalogRead(A18, min, max); }

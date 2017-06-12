@@ -10,25 +10,30 @@ class LedStrip
 {
 private:
 	static const ushort cLED;
+	static Led* GenerateLeds();
 
 	Adafruit_NeoPixel strip;
 	const Led* const leds;
-	static Led* GenerateLeds();
-	void setColorNoGamma(ushort px, Colr colr);
+	float frBrightness;
+
+	void SetColorRaw(ushort px, Colr colr);
+	Colr ColrRawForColr(Colr colr);
 
 public:
 	LedStrip();
 
-	void setColor(ushort px, Colr colr);
-	void show();
+	void SetBrightness(float fr);
 
-	void spinStrip(Colr colr, Colr colrCenter, ulong time, float revsPerSec);
+	void SetColor(ushort px, Colr colr);
+	void Show();
+
+	void SpinStrip(Colr colr, Colr colrCenter, ulong time, float revsPerSec);
 
 	// color space tests
-	void setStripColor(Colr colr);
-	void globalAxis(uint face, float x, float y, float z, float w, Colr colr);
-	void rainbowFace(uint face);
-	void rainbowFaceLinear(uint face, float offs, float polarOffs);
+	void SetStripColor(Colr colr);
+	void GlobalAxis(uint face, float x, float y, float z, float w, Colr colr);
+	void RainbowFace(uint face);
+	void RainbowFaceLinear(uint face, float offs, float polarOffs);
 };
 
 #endif
