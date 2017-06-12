@@ -33,7 +33,7 @@ public:
 	void OnPressF() {OnPress('F');}
 
 	Totem() :
-		log(true), plot(false),
+		log(true), plot(true),
 		input(this), audio(input)
 	{ }
 
@@ -156,8 +156,11 @@ public:
 
 	void displayAudio()
 	{
+		uint dec = (uint)input.ReadC(1, 10);
+		plot.knobC = dec;
+	//	audio.SetDecay(dec);
 		bool isLoud;
-		float light = audio.GetEnergy(isLoud);
+		float light = audio.GetEnergy(isLoud, &plot);
 		LightStrip(light, isLoud);
 		delay(23);
 	}

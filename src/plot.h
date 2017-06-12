@@ -23,6 +23,10 @@ class Plot
 		double x = 0;
 		double w = 0;
 
+		double knobA = 0;
+		double knobB = 0;
+		double knobC = 0;
+
 		Plot(bool enable);
 		void plot();
 };

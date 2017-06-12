@@ -61,7 +61,7 @@ Input::Input(BtnHandler* btnHandler) :
 uint Input::AnalogReadInt(uint pin, uint bitsPrecision)
 {
 	uint bitsOffset = this->bitsPrecision - bitsPrecision;
-	return analogRead(pin) >> bitsOffset;
+	return analogRead(pin);// >> bitsOffset;
 }
 
 float Input::AnalogRead(uint pin, float min, float max)

@@ -1,5 +1,7 @@
 #include <Statistic.h>
 #include "audio.h"
+#include "plot.h"
+#include "log.h"
 
 static const uint strobePin = 14;
 static const uint resetPin = 15;
@@ -10,14 +12,21 @@ static const uint cSmp = 43;
 static volatile uint iSmp = 0;
 static volatile float samples[cSmp];
 
+static volatile uint decay = 1;
+
 static Audio* audio;
 void sampleAudio()
 {
-	float sample = audio->ReadAudioValues(0, 2);
+	float sample = audio->SampleAudioValues();
   	noInterrupts();
 	samples[iSmp] = sample;
 	iSmp = (iSmp + 1) % cSmp;
   	interrupts();
+}
+
+void Audio::SetDecay(uint _decay)
+{
+	decay = _decay;
 }
 
 Audio::Audio(Input& input) : input(input)
@@ -35,38 +44,53 @@ Audio::Audio(Input& input) : input(input)
 	sampleTimer.begin(sampleAudio, 1000.f*1000.f/cSmp);
 }
 
-uint Audio::ReadAudioValues(uint binStart, uint binEnd)
+
+float Audio::SampleAudioValues()
+{
+	return SampleAudioValues(0, 3);
+}
+
+float Audio::SampleAudioValues(uint binStart, uint binEnd)
 {
 	digitalWrite(strobePin, LOW);
 	digitalWrite(resetPin, HIGH);
 	delayMicroseconds(1);
 	digitalWrite(resetPin, LOW);
 
-	uint values[7];
-	uint value = 0;
-	for (uint i = 0; i < binEnd; ++i)
+	float values[7];
+	float accum = 0;
+	for (uint iDecay = 0; iDecay < decay; ++iDecay)
 	{
-		digitalWrite(strobePin, HIGH);
-		delayMicroseconds(40);
-		digitalWrite(strobePin, LOW);
-		delayMicroseconds(20);
-		values[i] = input.AnalogReadInt(A22, 10);
-		if (i >= binStart)
-			value += values[i];
+		for (uint i = 0; i < 7; ++i)
+		{
+			digitalWrite(strobePin, HIGH);
+			delayMicroseconds(40);
+			digitalWrite(strobePin, LOW);
+			delayMicroseconds(20);
+			float value = input.AnalogRead(A22, 0, 1);
+			if (iDecay == 0)
+			{
+				values[i] = value;
+				if (i >= binStart && i < binEnd)
+					accum += value;
+			}
 
-		delayMicroseconds(20);
+			delayMicroseconds(20);
+		}
 	}
 
-	return value;
-
-	/*	for (int i = 0; i < 7; ++i)
-			log << values[i] << ", ";
-		log << "\n";
-	*///	delay(500);
+/*
+	for (int i = 0; i < 7; ++i)
+		(*Log::log) << values[i] << ", ";
+	(*Log::log) << "\n";
+		delay(500);
+*/
+	return 1024.f * accum / (binEnd - binStart);
 }
 
-float Audio::GetEnergy(bool& isLoud)
+float Audio::GetEnergy(bool& isLoud, Plot* _plot)
 {
+	Plot& plot = *_plot;
 	float energy = samples[iSmp];
 	Statistic stats;
 	for (uint i = 0; i < cSmp; ++i)
@@ -79,31 +103,36 @@ float Audio::GetEnergy(bool& isLoud)
 		float delta = samples[i] - avg;
 		variance += delta*delta;
 	}
-	variance /= (float)cSmp;
+	variance = variance / (float)cSmp;
 
-	float C = -.0025714 * variance + 1.5142857;
+	float C = -.0025714 * sqrt(variance) + 1.5142857;
 	float threshold = avg * C;
 	isLoud = energy > threshold;
 
 	bool isBeat = true;
 	bool wasBeat = (millis - msLastBeat) < msPerBeat;
 
+	if (isLoud)
+		msLastBeat = millis;
+
 	if (!wasBeat)
 	{
-		if (isLoud)
-			msLastBeat = millis;
-		else
+		if (!isLoud)
+			//msLastBeat = millis;
+		//else
 			isBeat = false;
 	}
 
 	float smoothed = isBeat ? .1 : 0; // ?
 
-/*	plot.val = energy;
+	plot.val = energy;
 	plot.avg = avg;
-	plot.std = variance;
-	plot.smoothed = smoothed;
-	plot.plot();*/
+	plot.std = sqrt(variance);
+	plot.smoothed = threshold;
+	plot.plot();
 
+	isLoud = false;
+	return saturate((millis - msLastBeat) / (4.f*msPerBeat));
 	return dmap(energy,
 		avg - (smoothed - avg),
 		smoothed,

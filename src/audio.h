@@ -3,6 +3,8 @@
 
 #include "input.h"
 
+class Plot;
+
 class Audio
 {
 private:
@@ -15,10 +17,12 @@ private:
 public:
 	Audio(Input& input);
 
-	float GetEnergy(bool& isLoud);
+	float GetEnergy(bool& isLoud, Plot* plot);
 
 // private:
-	uint ReadAudioValues(uint binStart, uint binEnd);
+	void SetDecay(uint decay);
+	float SampleAudioValues(uint binStart, uint binEnd);
+	float SampleAudioValues();
 };
 
 #endif
