@@ -2,8 +2,8 @@
 #define leds_h
 
 #include <Adafruit_NeoPixel.h>
-#include "colr.h"
-#include "lmath.h"
+#include "common.h"
+#include "util/lmath.h"
 
 #define ForEachLed(var) for (uint var = 0; var < LedStrip::cLED; ++var)
 

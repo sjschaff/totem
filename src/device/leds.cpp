@@ -1,5 +1,4 @@
 #include "leds.h"
-#include "log.h"
 
 const ushort LedStrip::cLED = 195;
 

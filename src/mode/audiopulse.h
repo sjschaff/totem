@@ -1,10 +1,9 @@
-#ifndef audiosimple_h
-#define audiosimple_h
+#ifndef audiopulse_h
+#define audiopulse_h
 
 #include <list>
 #include <vector>
-#include "anim.h"
-#include "leds.h"
+#include "mode.h"
 
 struct Beat
 {

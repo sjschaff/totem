@@ -1,7 +1,7 @@
 #ifndef colr_h
 #define colr_h
 
-#include "util.h"
+#include "util/util.h"
 
 struct Colr
 {

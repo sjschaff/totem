@@ -1,7 +1,7 @@
 #ifndef input_h
 #define input_h
 
-#include "util.h"
+#include "common.h"
 
 class BtnHandler
 {

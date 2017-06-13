@@ -1,10 +1,8 @@
-#include "util.h"
-#include "audio.h"
-#include "input.h"
-#include "leds.h"
-#include "plot.h"
-#include "log.h"
-#include "anim/audiopulse.h"
+#include "common.h"
+#include "device/audio.h"
+#include "device/input.h"
+#include "device/leds.h"
+#include "mode/audiopulse.h"
 
 // TODO
 /*

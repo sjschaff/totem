@@ -1,9 +1,8 @@
 #ifndef anim_h
 #define anim_h
 
-#include "util.h"
-#include "input.h"
-#include "leds.h"
+#include "common.h"
+#include "device/leds.h"
 /*
 template<class Src, class Op>
 class Aval
@@ -62,7 +61,7 @@ public:
 	}
 };
 */
-#include "audio.h"
+#include "device/audio.h"
 
 struct Frame
 {
@@ -140,22 +139,5 @@ public:
 	}
 };
 
-class Mode : BtnHandler
-{
-protected:
-	LedStrip& strip;
-	Input& input;
-
-public:
-	Mode(LedStrip& strip, Input& input);
-	virtual void Update(Frame frame) = 0;
-
-	virtual void OnPressA();
-	virtual void OnPressB();
-	virtual void OnPressC();
-	virtual void OnPressD();
-	virtual void OnPressE();
-	virtual void OnPressF();
-};
 
 #endif

@@ -1,7 +1,5 @@
 #include <Statistic.h>
 #include "audio.h"
-#include "plot.h"
-#include "log.h"
 
 static const uint strobePin = 14;
 static const uint resetPin = 15;

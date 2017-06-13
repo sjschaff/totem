@@ -1,5 +1,4 @@
 #include "input.h"
-#include "log.h"
 
 // TODO Static assert don't use ADC0
 // TODO Verify if dual adc ports can be used
@@ -61,7 +60,7 @@ Input::Input(BtnHandler* btnHandler) :
 uint Input::AnalogReadInt(uint pin, uint bitsPrecision)
 {
 	uint bitsOffset = this->bitsPrecision - bitsPrecision;
-	return analogRead(pin);// >> bitsOffset;
+	return analogRead(pin) >> bitsOffset;
 }
 
 float Input::AnalogRead(uint pin, float min, float max)

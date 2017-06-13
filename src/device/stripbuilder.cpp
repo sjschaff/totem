@@ -1,4 +1,4 @@
-#include "lmath_full.h"
+#include "util/lmath_full.h"
 #include "leds.h"
 
 namespace StripBuilder
