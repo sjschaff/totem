@@ -113,6 +113,9 @@ struct AnimYRing
 {
 	void Display(LedStrip& strip, Frame frame, float phase)
 	{
+		float phaseColor = phase;
+		float frHue = smoothstepDual(phaseColor*2 - 1);
+		phase = frac(phase*4);
 		ForEachLed(iLed)
 		{
 			Led led = strip.leds[iLed];
@@ -120,11 +123,15 @@ struct AnimYRing
 
 			if (led.rad > 50)
 			{
-				float width = mapfr(frame.knobC, .01, .2);
+				float width = .2;
 			//	phase = frame.knobB;
 				float dist = modDelta(phase, led.frPolar) / width;
 				float intens = smoothstepDual(dist);
-				colr = Colr::Hue(1.f/12.f) * intens;
+				colr =
+					Colr::Lerp(
+						Colr::Hue(1.f/24.f),
+						Colr::Hue(1.f/24.f +.5f),
+						frHue) * intens;
 			}
 
 			strip.SetColor(iLed, colr);
@@ -203,15 +210,20 @@ AudioPulse::AudioPulse(LedStrip& strip, Input& input)
 	: Mode(strip, input)
 {
 	anims.push_back(
-
-	new AnimSmp<PhasePulse, AnimYRing>(
-		PhasePulse(.25, 2), // TODO Slow speed for this is perfect for chill mode
-		AnimYRing()));
+		new AnimSmp<PhaseLinear, AnimYRing>(
+			PhaseLinear(4000*4),
+			AnimYRing()));
 
 	anims.push_back(
-		new AnimSmp<PhaseLinear, AnimYRing>(
-			PhaseLinear(4000),
+		new AnimSmp<PhasePulse, AnimYRing>(
+			PhasePulse(.125, 1), // TODO Slow speed for this is perfect for chill mode
 			AnimYRing()));
+
+	anims.push_back(
+		new AnimSmp<PhasePulse, AnimYRing>(
+			PhasePulse(.25, 2), // TODO Slow speed for this is perfect for chill mode
+			AnimYRing()));
+
 
 	anims.push_back(
 		new AnimSmp<PhaseLinear, AnimRings>(

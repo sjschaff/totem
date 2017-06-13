@@ -1,5 +1,6 @@
 #include "colr.h"
 
+// nice orange Colr::Hue(1.f/12.f) 
 const Colr Colr::Red = Colr(1, 0, 0);
 const Colr Colr::Yellow = Colr(1, 1, 0);
 const Colr Colr::Green = Colr(0, 1, 0);
