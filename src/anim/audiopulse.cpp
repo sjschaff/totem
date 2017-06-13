@@ -5,7 +5,7 @@ Beat::Beat(ulong msStart) : msStart(msStart) {}
 
 struct AnimSpin
 {
-	void Display(LedStrip& strip, float phase)
+	void Display(LedStrip& strip, Frame frame, float phase)
 	{
 		ForEachLed(iLed)
 		{
@@ -89,20 +89,98 @@ public:
 		strip.SetStripColor(colr);
 	}
 };
-/*
-struct AnimRings : public Anim
-{
 
-};*/
+struct AnimRing : public Anim
+{
+	void Update(LedStrip& strip, Frame frame)
+	{
+		ForEachLed(iLed)
+		{
+			Led led = strip.leds[iLed];
+			if (led.face.iRing == 2)
+			{
+				strip.SetColor(iLed, Colr::Green * frame.audio.energy);
+			}
+			else
+			{
+				strip.SetColor(iLed, Colr::Black);
+			}
+		}
+	}
+};
+
+struct AnimRings
+{
+	uint iPhase = 0;
+	uint iPhaseTop = 5;
+	bool wasLoud = false;
+
+	void Display(LedStrip& strip, Frame frame, float phase)
+	{
+		//if (frame.audio.isBeginBeat)
+			//iPhase = (iPhase + 1) % 4;
+
+			bool isLoud = frame.audio.isBeat;
+			if (isLoud)
+			{
+				//audio = 1;
+				if (!wasLoud)
+				{
+					iPhase = (iPhase + 1) % 6;
+					iPhaseTop = (iPhaseTop + 1) % 12;
+					wasLoud = true;
+				}
+			}
+			else
+			{
+				//audio = 0;
+				wasLoud = false;
+			}
+		ForEachLed(iLed)
+		{
+			Led led = strip.leds[iLed];
+			Colr colr = Colr::Black;
+
+		/*	float width = mapfr(frame.knobC, .25, 2);
+			float rad = mapfr(phase, -width, 3+width);
+			float dist = abs(rad - led.face.frRad) / width;
+			float intens = smoothstepDual(dist);
+			intens = 1 - saturate(dist);
+			strip.SetColor(iLed, Colr::Green * intens);*/
+			//uint iPhase = phase * 3.999;
+			if (led.face.iRing > 3)
+			{
+				float hue = led.iFacePolar / 10.f;
+				hue +=  iPhaseTop / 6.f;
+				if (led.face.iRing == 6)
+					hue += .5;
+
+				colr = Colr::Hue(hue);
+			} else if (led.face.iRing == (iPhase % 3))
+				colr = Colr::Hue(1.f/3.f + (iPhase % 2)*.5) * frame.audio.energy;
+
+			strip.SetColor(iLed, colr);
+		}
+	}
+};
 
 AudioPulse::AudioPulse(LedStrip& strip, Input& input)
 	: Mode(strip, input)
 {
 	anims.push_back(
+		new AnimSmp<PhaseLinear, AnimRings>(
+			PhaseLinear(600),
+			AnimRings()));
+
+	anims.push_back(new AnimRing());
+
+	anims.push_back(
 		new AnimSmp<PhasePulse, AnimSpin>(
 			PhasePulse(.5, 4),
 			AnimSpin()));
+
 	anims.push_back(new AnimFlash());
+
 	iAnim = 0;
 }
 

@@ -136,7 +136,7 @@ public:
 
 	void Update(LedStrip& strip, Frame frame) {
 		phase.Accumulate(frame);
-		anim.Display(strip, phase.Value());
+		anim.Display(strip, frame, phase.Value());
 	}
 };
 

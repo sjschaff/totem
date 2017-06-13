@@ -15,6 +15,7 @@ struct Led
 
 		uint iRing;
 		float rad;
+		float frRad; // 0 to ~3
 
 		float polar;
 		float frPolar;
@@ -24,7 +25,8 @@ struct Led
 		vec2 pt;
 	} face;
 
-	uint iFace;
+	uint iFace; // 0-5
+	uint iFacePolar; // 0-10
 	vec3 zpt;
 	float lat, lon;
 };

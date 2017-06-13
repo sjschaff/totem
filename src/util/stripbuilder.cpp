@@ -18,6 +18,9 @@ namespace StripBuilder
 	const ushort tipC = 5;
 	const ushort tipD = 6;
 
+	const float radii[] = { 0, 27, 53, 83, 110, 132, 156 }; // TODO Compute
+	const float polarDeltas[] = { 0, 1 / (float)cInner, 1 / (float)cOuter, 0.0467, 0.0218, 0, 0};
+
 	const vec3 zptUpper = vec3(0, 0, -56);
 	const vec3 zptLowerLeft = mul(glm::rotate(mat4(), rads(144.f), vec3(0, 1, 0)), zptUpper);
 	const vec3 zptUpperRight = mul(glm::rotate(mat4(), rads(-72.f), vec3(0, 1, 0)), zptUpper);
@@ -56,17 +59,15 @@ namespace StripBuilder
 			xfFrontUpperRight;
 	}
 
-	Led InitLedGlobal(Led::Face ledFace, uint iFace, mat4 xfm)
+	Led InitLedGlobal(Led::Face ledFace, uint iFace, uint iFacePolar, mat4 xfm)
 	{
 		Led led;
 		led.face = ledFace;
 		led.iFace = iFace;
+		led.iFacePolar = iFacePolar;
 		led.zpt = xfm * vec4(ledFace.pt.x, 0, -ledFace.pt.y, 1);
 		return led;
 	}
-
-	const float radii[] = { 0, 27, 53, 83, 110, 132, 156 }; // TODO Compute
-	const float polarDeltas[] = { 0, 1 / (float)cInner, 1 / (float)cOuter, 0.0467, 0.0218, 0, 0};
 
 	Led::Face InitLedFace(uint iRing, int iPolar)
 	{
@@ -85,6 +86,8 @@ namespace StripBuilder
 			led.rad = 86;
 		else
 			led.rad = radii[iRing];
+
+		led.frRad = led.rad / radii[2];
 
 		led.pt = vec2(
 			cos(led.polar)*led.rad,
@@ -130,13 +133,13 @@ namespace StripBuilder
 			{
 				uint iLedHalf = iLedFace + iLed;
 				Led::Face face = ledsFace[iLed];
-				leds[iLedHalf] = InitLedGlobal(face, iFace, xfLower);
-				leds[iLedUpper + iLedHalf] = InitLedGlobal(face, iFace, xfUpper);
+				leds[iLedHalf] = InitLedGlobal(face, iFace, iFace*2, xfLower);
+				leds[iLedUpper + iLedHalf] = InitLedGlobal(face, iFace, iFace*2 + 1, xfUpper);
 			}
 
 			uint iLedFaceTip = iLedTip + iFace * cLedTip;
 			for (uint iLed = 0; iLed < cLedTip; ++iLed)
-				leds[iLedFaceTip + iLed] = InitLedGlobal(ledsTip[iLed], iFace, xfUpper);
+				leds[iLedFaceTip + iLed] = InitLedGlobal(ledsTip[iLed], iFace, iFace*2 + 1, xfUpper);
 		}
 
 		return leds;
