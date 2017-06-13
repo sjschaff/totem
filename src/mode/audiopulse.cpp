@@ -57,7 +57,10 @@ public:
 				uint iFaceIn = (iFaceTop + 1) % 5;
 
 				if (led.face.iRing == 6)
+				{
 					hue += .5;
+					*Log::log << "y max: " << led.zpt.y << "\n";
+				}
 
 				colr = Colr::Hue(hue);
 				float smth = smoothstep(frIFaceTop); // move out of loop
@@ -97,7 +100,11 @@ public:
 AudioPulse::AudioPulse(LedStrip& strip, Input& input)
 	: Mode(strip, input)
 {
-	anims.push_back(new AnimBreathe(2000));
+	anims.push_back(new AnimBreathe(.2, 2000));
+
+	// was .1, 4.5.  good but flickery
+	anims.push_back(new AnimVertPulse(.126, PhasePulse(.15, 3.5)));
+
 	anims.push_back(new AnimLighthouse(4000*4));
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.125, .5)));
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.25, 2))); // TODO Slow speed for this is perfect for chill mode (account for 4x tho)

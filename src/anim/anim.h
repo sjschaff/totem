@@ -81,7 +81,7 @@ protected:
 	virtual float Delta(Frame frame) = 0;
 
 public:
-	Phase(float dur = 1000) : phase(0), invDuration(1.f/dur) { }
+	Phase(float dur) : phase(0), invDuration(1.f/dur) { }
 
 	void Accumulate(Frame frame)
 	{
@@ -99,7 +99,8 @@ private:
 	const float sfBeat;
 
 public:
-	PhasePulse(float sfOffBeat, float sfBeat) : sfOffBeat(sfOffBeat), sfBeat(sfBeat) {}
+	PhasePulse(float sfOffBeat, float sfBeat)
+		: Phase(1000), sfOffBeat(sfOffBeat), sfBeat(sfBeat) {}
 
 	float Delta(Frame frame) {
 		if (frame.audio.isBeat)

@@ -3,7 +3,7 @@
 
 namespace StripBuilder
 {
-	const float maxY = 233; // TODO: More precise tuning
+	const float maxY = 247.63;
 
 	const ushort outer[] = { 4, 5, 6, 7, 15, 14, 0, 1, 2, 3 };
 	const ushort cOuter = 10;

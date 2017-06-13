@@ -1,7 +1,7 @@
 #include "anims.h"
 
 template<class TPhase>
-void AnimVertPulse<TPhase>::Display(LedStrip& strip, Frame frame, float phase)
+void AnimVertPulseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phase)
 {
 	const float frGap = 0;//.2; // TODO: param
 	const float frPulse = 1 - frGap;
@@ -38,4 +38,8 @@ void AnimVertPulse<TPhase>::Display(LedStrip& strip, Frame frame, float phase)
 	}
 }
 
-AnimBreathe::AnimBreathe(float duration) : AnimVertPulse<PhaseLinear>(PhaseLinear(duration)) {}
+AnimBreathe::AnimBreathe(float width, float duration)
+	: AnimVertPulseBase<PhaseLinear>(width, PhaseLinear(duration)) {}
+
+AnimVertPulse::AnimVertPulse(float width, PhasePulse phase)
+	: AnimVertPulseBase<PhasePulse>(width, phase) {}

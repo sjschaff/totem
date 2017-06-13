@@ -44,19 +44,27 @@ public:
 };
 
 template<class TPhase>
-class AnimVertPulse : public PhaseAnim<TPhase>
+class AnimVertPulseBase : public PhaseAnim<TPhase>
 {
 protected:
-	AnimVertPulse(TPhase phase) : PhaseAnim<TPhase>(phase) {}
+	const float width;
+	AnimVertPulseBase(float width, TPhase phase)
+		: PhaseAnim<TPhase>(phase), width(width) {}
 
 public:
 	void Display(LedStrip& strip, Frame frame, float phase);
 };
 
-class AnimBreathe : public AnimVertPulse<PhaseLinear>
+class AnimBreathe : public AnimVertPulseBase<PhaseLinear>
 {
 public:
-	AnimBreathe(float duration);
+	AnimBreathe(float width, float duration);
+};
+
+class AnimVertPulse : public AnimVertPulseBase<PhasePulse>
+{
+public:
+	AnimVertPulse(float width, PhasePulse phase);
 };
 
 #endif
