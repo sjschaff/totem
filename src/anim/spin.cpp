@@ -1,5 +1,7 @@
 #include "anims.h"
 
+AnimSpin::AnimSpin() : PhaseAnim(PhasePulse(.5, 4)) {}
+
 void AnimSpin::Display(LedStrip& strip, Frame frame, float phase)
 {
 	ForEachLed(iLed)

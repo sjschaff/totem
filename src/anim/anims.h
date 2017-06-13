@@ -3,12 +3,14 @@
 
 #include "anim.h"
 
-struct AnimSpin
+class AnimSpin : public PhaseAnim<PhasePulse>
 {
+public:
+	AnimSpin();
 	void Display(LedStrip& strip, Frame frame, float phase);
 };
 
-struct AnimFlash : public Anim
+class AnimFlash : public Anim
 {
 private:
 	bool wasLoud;
@@ -19,9 +21,26 @@ public:
 	void Update(LedStrip& strip, Frame frame);
 };
 
-struct AnimLighthouse
+template<class TPhase>
+class LighthouseBase : public PhaseAnim<TPhase>
 {
+protected:
+	LighthouseBase(TPhase phase) : PhaseAnim<TPhase>(phase) {}
+
+public:
 	void Display(LedStrip& strip, Frame frame, float phase);
+};
+
+class AnimLighthouse : public LighthouseBase<PhaseLinear>
+{
+public:
+	AnimLighthouse(float duration);
+};
+
+class AnimLighthousePulse : public LighthouseBase<PhasePulse>
+{
+public:
+	AnimLighthousePulse(PhasePulse phase);
 };
 
 #endif

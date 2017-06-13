@@ -1,6 +1,7 @@
 #include "anims.h"
 
-void AnimLighthouse::Display(LedStrip& strip, Frame frame, float phase)
+template<class TPhase>
+void LighthouseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phase)
 {
 	float phaseColor = phase;
 	float frHue = smoothstepDual(phaseColor*2 - 1);
@@ -26,3 +27,9 @@ void AnimLighthouse::Display(LedStrip& strip, Frame frame, float phase)
 		strip.SetColor(iLed, colr);
 	}
 }
+
+AnimLighthouse::AnimLighthouse(float duration)
+	: LighthouseBase(PhaseLinear(duration)) {}
+
+AnimLighthousePulse::AnimLighthousePulse(PhasePulse phase)
+	: LighthouseBase(phase) {}

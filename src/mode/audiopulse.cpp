@@ -4,11 +4,15 @@
 Beat::Beat(ulong msStart) : msStart(msStart) {}
 
 // Random test stuff
-struct AnimRings
+class AnimRings : public PhaseAnim<PhaseLinear>
 {
+private:
 	uint iPhase = 0;
 	uint iPhaseTop = 5;
 	bool wasLoud = false;
+
+public:
+	AnimRings(float duration) : PhaseAnim(PhaseLinear(duration)) {}
 
 	void Display(LedStrip& strip, Frame frame, float phase)
 	{
@@ -93,31 +97,11 @@ struct AnimRings
 AudioPulse::AudioPulse(LedStrip& strip, Input& input)
 	: Mode(strip, input)
 {
-	anims.push_back(
-		new AnimSmp<PhaseLinear, AnimLighthouse>(
-			PhaseLinear(4000*4),
-			AnimLighthouse()));
-
-	anims.push_back(
-		new AnimSmp<PhasePulse, AnimLighthouse>(
-			PhasePulse(.125, .5), // TODO Slow speed for this is perfect for chill mode
-			AnimLighthouse()));
-
-	anims.push_back(
-		new AnimSmp<PhasePulse, AnimLighthouse>(
-			PhasePulse(.25, 2), // TODO Slow speed for this is perfect for chill mode (account for 4x tho)
-			AnimLighthouse()));
-
-	anims.push_back(
-		new AnimSmp<PhaseLinear, AnimRings>(
-			PhaseLinear(1000),
-			AnimRings()));
-
-	anims.push_back(
-		new AnimSmp<PhasePulse, AnimSpin>(
-			PhasePulse(.5, 4),
-			AnimSpin()));
-
+	anims.push_back(new AnimLighthouse(4000*4));
+	anims.push_back(new AnimLighthousePulse(PhasePulse(.125, .5)));
+	anims.push_back(new AnimLighthousePulse(PhasePulse(.25, 2))); // TODO Slow speed for this is perfect for chill mode (account for 4x tho)
+	anims.push_back(new AnimRings(1000));
+	anims.push_back(new AnimSpin());
 	anims.push_back(new AnimFlash());
 
 	iAnim = 0;

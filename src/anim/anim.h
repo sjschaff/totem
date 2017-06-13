@@ -123,21 +123,22 @@ public:
 	virtual void Update(LedStrip& strip, Frame frame) = 0;
 };
 
-template<class TPhase, class TAnim>
-class AnimSmp : public Anim
+template<class TPhase>
+class PhaseAnim : public Anim
 {
 private:
 	TPhase phase;
-	TAnim anim;
+
+protected:
+	PhaseAnim(TPhase phase) : phase(phase) {}
+
+	virtual void Display(LedStrip& strip, Frame frame, float phase) = 0;
 
 public:
-	AnimSmp(TPhase phase, TAnim anim) : phase(phase), anim(anim) {}
-
 	void Update(LedStrip& strip, Frame frame) {
 		phase.Accumulate(frame);
-		anim.Display(strip, frame, phase.Value());
+		Display(strip, frame, phase.Value());
 	}
 };
-
 
 #endif
