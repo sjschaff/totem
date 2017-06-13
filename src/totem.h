@@ -39,7 +39,8 @@ public:
 		log(true), plot(true),
 		input(this), audio(input)
 	{
-		mode = new AudioSimple(strip);
+		mode = new AudioPulse(strip, input);
+		//new AudioSimple(strip);
 	}
 
 	void OnPress(char c)
@@ -62,9 +63,9 @@ public:
 			//plot.knobC = dec;
 			//	audio.SetDecay(dec);
 
-		bool isLoud;
-		float energy = audio.GetEnergy(isLoud, &plot);
-		mode->Update(millis, energy, isLoud);
+		bool isBeat, isBeginBeat;
+		float energy = audio.GetEnergy(isBeat, isBeginBeat, &plot);
+		mode->Update(millis, energy, isBeat, isBeginBeat);
 		delay(23); // TODO?
 
 		//spin();

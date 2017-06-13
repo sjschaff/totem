@@ -35,7 +35,11 @@ float saturate(float v);
 float frac(float v);
 float dmap(float val, float fMin, float fMax, float tMin, float tMax);
 float mapfr(float val, float min, float max);
-
 float lerp(float a, float b, float fr);
+float smoothstep(float val); // 0 -> 1
+float smoothstepDual(float val); // -1 -> 1;
+
+float frPhase(uint ms, uint phase);
+float modDelta(float x, float y);
 
 #endif

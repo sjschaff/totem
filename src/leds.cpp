@@ -1,8 +1,5 @@
 #include "leds.h"
 #include "log.h"
-#include "util/stripbuilder.h"
-
-#define ForEachLed(var) for (uint var = 0; var < cLED; ++var)
 
 const ushort LedStrip::cLED = 195;
 
@@ -51,7 +48,7 @@ void LedStrip::SetStripColor(Colr colr)
 void LedStrip::RainbowFace(uint iFace)
 {
 	ForEachLed(iLed)
-		SetColor(iLed, Colr::Hue(leds[iLed].polarFace/(2*PI))*.4);
+		SetColor(iLed, Colr::Hue(leds[iLed].face.frPolar));
 	Show();
 }
 
@@ -60,8 +57,8 @@ void LedStrip::RainbowFaceLinear(uint iFace, float offs, float polarOffs)
 	ForEachLed(iLed)
 	{
 		Led led = leds[iLed];
-		float polar = led.polarFace + polarOffs*2*PI;
-		float x = cos(polar) * led.radFace;
+		float polar = led.face.polar + polarOffs*2*PI;
+		float x = cos(polar) * led.face.rad;
 
 		float val = frac(dmap(x, -52, 52, 0, 1) + offs);
 		SetColor(iLed, Colr::Hue(val)*.5);

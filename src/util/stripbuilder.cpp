@@ -1,5 +1,4 @@
 #include "lmath_full.h"
-#include "stripbuilder.h"
 #include "leds.h"
 
 namespace StripBuilder
@@ -57,34 +56,39 @@ namespace StripBuilder
 			xfFrontUpperRight;
 	}
 
-	Led InitLedGlobal(Led ledFace, uint iFace, mat4 xfm)
+	Led InitLedGlobal(Led::Face ledFace, uint iFace, mat4 xfm)
 	{
-		ledFace.iFace = iFace;
-		ledFace.zpt = xfm * vec4(ledFace.ptFace.x, 0, -ledFace.ptFace.y, 1);
-		return ledFace;
+		Led led;
+		led.face = ledFace;
+		led.iFace = iFace;
+		led.zpt = xfm * vec4(ledFace.pt.x, 0, -ledFace.pt.y, 1);
+		return led;
 	}
 
 	const float radii[] = { 0, 27, 53, 83, 110, 132, 156 }; // TODO Compute
 	const float polarDeltas[] = { 0, 1 / (float)cInner, 1 / (float)cOuter, 0.0467, 0.0218, 0, 0};
 
-	Led InitLedFace(uint iRing, int iPolar)
+	Led::Face InitLedFace(uint iRing, int iPolar)
 	{
-		Led led;
-		led.iFace = 0;
+		Led::Face led;
 		led.iRing = iRing;
-		led.polarDelta = polarDeltas[iRing] * 2 * PI;
-		led.polarFace = iPolar * led.polarDelta + PI/2;
+		led.frPolarDelta = polarDeltas[iRing];
+		led.polarDelta = led.frPolarDelta * (2*PI);
+
+		led.polar = iPolar * led.polarDelta + PI/2;
 		if (iRing > 2)
-			led.polarFace += PI;
+			led.polar += PI;
+
+		led.frPolar = led.polar / (2*PI);
 
 		if (iRing == 3 && iPolar == 0)
-			led.radFace = 86;
+			led.rad = 86;
 		else
-			led.radFace = radii[iRing];
+			led.rad = radii[iRing];
 
-		led.ptFace = vec2(
-			cos(led.polarFace)*led.radFace,
-			sin(led.polarFace)*led.radFace);
+		led.pt = vec2(
+			cos(led.polar)*led.rad,
+			sin(led.polar)*led.rad);
 
 		return led;
 	}
@@ -92,10 +96,10 @@ namespace StripBuilder
 	Led* GenerateLeds(ushort cLED)
 	{
 		uint cLedFace = cInner+cOuter+1;
-		Led ledsFace[cLedFace];
+		Led::Face ledsFace[cLedFace];
 
 		const uint cLedTip = 7;
-		Led ledsTip[cLedTip];
+		Led::Face ledsTip[cLedTip];
 
 		ledsFace[center] = InitLedFace(0, 0);
 
@@ -105,7 +109,7 @@ namespace StripBuilder
 			ledsFace[outer[i]] = InitLedFace(2, i);
 
 		for (uint i = 0; i < cTipA; ++i)
-			ledsTip[tipA[i]] = InitLedFace(3, i - 1);
+			ledsTip[tipA[i]] = InitLedFace(3, i-1);
 		for (uint i = 0; i < cTipB; ++i)
 			ledsTip[tipB[i]] = InitLedFace(4, i*2-1);
 
@@ -125,9 +129,9 @@ namespace StripBuilder
 			for (uint iLed = 0; iLed < cLedFace; ++iLed)
 			{
 				uint iLedHalf = iLedFace + iLed;
-				Led led = ledsFace[iLed];
-				leds[iLedHalf] = InitLedGlobal(led, iFace, xfLower);
-				leds[iLedUpper + iLedHalf] = InitLedGlobal(led, iFace, xfUpper);
+				Led::Face face = ledsFace[iLed];
+				leds[iLedHalf] = InitLedGlobal(face, iFace, xfLower);
+				leds[iLedUpper + iLedHalf] = InitLedGlobal(face, iFace, xfUpper);
 			}
 
 			uint iLedFaceTip = iLedTip + iFace * cLedTip;

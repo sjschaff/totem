@@ -17,7 +17,7 @@ private:
 public:
 	Audio(Input& input);
 
-	float GetEnergy(bool& isLoud, Plot* plot);
+	float GetEnergy(bool& isBeat, bool& isBeginBeat, Plot* plot);
 
 // private:
 	void SetDecay(uint decay);

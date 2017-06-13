@@ -12,7 +12,7 @@ static const uint cSmp = 43;
 static volatile uint iSmp = 0;
 static volatile float samples[cSmp];
 
-static volatile uint decay = 1;
+static  uint decay = 2;//1;
 
 static Audio* audio;
 void sampleAudio()
@@ -88,7 +88,7 @@ float Audio::SampleAudioValues(uint binStart, uint binEnd)
 	return 1024.f * accum / (binEnd - binStart);
 }
 
-float Audio::GetEnergy(bool& isLoud, Plot* _plot)
+float Audio::GetEnergy(bool& isBeat, bool& isBeginBeat, Plot* _plot)
 {
 	Plot& plot = *_plot;
 	float energy = samples[iSmp];
@@ -107,9 +107,14 @@ float Audio::GetEnergy(bool& isLoud, Plot* _plot)
 
 	float C = -.0025714 * sqrt(variance) + 1.5142857;
 	float threshold = avg * C;
-	isLoud = energy > threshold;
+	/*energy =
+		energy * .7 +
+		samples[(iSmp + cSmp - 1) % cSmp] * .3 ;*/
+//		samples[(iSmp + cSmp - 2) % cSmp] * .1;
+	bool isLoud = energy > threshold;
 
-	bool isBeat = true;
+	isBeat = true;
+	isBeginBeat = false;
 	bool wasBeat = (millis - msLastBeat) < msPerBeat;
 
 	if (isLoud)
@@ -117,9 +122,12 @@ float Audio::GetEnergy(bool& isLoud, Plot* _plot)
 
 	if (!wasBeat)
 	{
-		if (!isLoud)
+		if (isLoud)
+		{
 			//msLastBeat = millis;
-		//else
+			isBeginBeat = true;
+		}
+		else
 			isBeat = false;
 	}
 
@@ -131,7 +139,6 @@ float Audio::GetEnergy(bool& isLoud, Plot* _plot)
 	plot.smoothed = threshold;
 	plot.plot();
 
-	isLoud = isBeat;
 	return saturate((millis - msLastBeat) / (4.f*msPerBeat));
 	return dmap(energy,
 		avg - (smoothed - avg),

@@ -1,5 +1,4 @@
 #include "leds.h"
-#include "util/stripbuilder.h"
 
 float Tail(float head, float led, float len, float headLen)
 {
@@ -20,12 +19,12 @@ void LedStrip::SpinStrip(Colr col, Colr colCenter, ulong time, float revsPerSec)
 	for (uint i = 0; i < cLED; ++i)
 	{
 		Led led = leds[i];
-		if (led.iRing == 0)
+		if (led.face.iRing == 0)
 			SetColor(i, colCenter);//Colr(0));
 		else
 		{
-			float aa = 1.5*(led.iRing == 2 ? 2 : 1)*led.polarDelta / (2*PI);
-			float tail = Tail(head, led.polarFace / (2 * PI), tailLen, aa);
+			float aa = 1.5*(led.face.iRing == 2 ? 2 : 1)*led.face.frPolarDelta;
+			float tail = Tail(head, led.face.frPolar, tailLen, aa);
 			SetColor(i, col*tail);
 		}
 	}

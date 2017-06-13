@@ -38,3 +38,27 @@ float lerp(float a, float b, float fr)
 {
 	  return (b - a) * fr + a;
 }
+
+float frPhase(uint ms, uint phase)
+{
+	return (ms % phase) / (float)phase;
+}
+
+float smoothstep(float t)
+{
+	t = saturate(t);
+	return t * t * (3.0 - 2.0 * t);
+}
+
+float smoothstepDual(float t)
+{
+	return 1 - smoothstep(abs(t));
+}
+
+float modDelta(float x, float y)
+{
+	float delta = abs(y - x);
+	if (delta > .5)
+		delta = 1 - delta;
+	return delta;
+}
