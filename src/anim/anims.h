@@ -43,4 +43,20 @@ public:
 	AnimLighthousePulse(PhasePulse phase);
 };
 
+template<class TPhase>
+class AnimVertPulse : public PhaseAnim<TPhase>
+{
+protected:
+	AnimVertPulse(TPhase phase) : PhaseAnim<TPhase>(phase) {}
+
+public:
+	void Display(LedStrip& strip, Frame frame, float phase);
+};
+
+class AnimBreathe : public AnimVertPulse<PhaseLinear>
+{
+public:
+	AnimBreathe(float duration);
+};
+
 #endif

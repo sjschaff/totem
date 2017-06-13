@@ -28,7 +28,7 @@ struct Led
 	uint iFace; // 0-5
 	uint iFacePolar; // 0-10
 	vec3 zpt;
-	// TODO frY
+	float frY;
 	float frPolar;
 	float rad;
 };

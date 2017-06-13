@@ -3,6 +3,8 @@
 
 namespace StripBuilder
 {
+	const float maxY = 233; // TODO: More precise tuning
+
 	const ushort outer[] = { 4, 5, 6, 7, 15, 14, 0, 1, 2, 3 };
 	const ushort cOuter = 10;
 
@@ -66,6 +68,7 @@ namespace StripBuilder
 		led.iFace = iFace;
 		led.iFacePolar = iFacePolar;
 		led.zpt = xfm * vec4(ledFace.pt.x, 0, -ledFace.pt.y, 1);
+		led.frY = led.zpt.y / maxY;
 		led.frPolar = atan2(led.zpt.z, led.zpt.x) / (2*PI);
 		led.rad = sqrt(led.zpt.z*led.zpt.z + led.zpt.x*led.zpt.x);
 		return led;

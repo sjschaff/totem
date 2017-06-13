@@ -97,6 +97,7 @@ public:
 AudioPulse::AudioPulse(LedStrip& strip, Input& input)
 	: Mode(strip, input)
 {
+	anims.push_back(new AnimBreathe(2000));
 	anims.push_back(new AnimLighthouse(4000*4));
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.125, .5)));
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.25, 2))); // TODO Slow speed for this is perfect for chill mode (account for 4x tho)
