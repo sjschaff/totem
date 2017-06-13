@@ -5,12 +5,12 @@ static const uint strobePin = 14;
 static const uint resetPin = 15;
 
 static const uint msPerBeat = 35;
-
+static const uint decay = 2;//1;
 static const uint cSmp = 43;
+
 static volatile uint iSmp = 0;
 static volatile float samples[cSmp];
-
-static uint decay = 2;//1;
+static volatile bool fSampleReady = false;
 
 static Audio* audio;
 void sampleAudio()
@@ -19,13 +19,14 @@ void sampleAudio()
   	noInterrupts();
 	samples[iSmp] = sample;
 	iSmp = (iSmp + 1) % cSmp;
+	fSampleReady = true;
   	interrupts();
 }
-
+/*
 void Audio::SetDecay(uint _decay)
 {
 	decay = _decay;
-}
+}*/
 
 Audio::Audio(Input& input) : input(input)
 {
@@ -88,6 +89,10 @@ float Audio::SampleAudioValues(uint binStart, uint binEnd)
 
 AudioData Audio::ReadAudio(Plot* _plot)
 {
+	while (!fSampleReady)
+		delayMicroseconds(100);
+
+	fSampleReady = false;
 	Plot& plot = *_plot;
 	float energy = samples[iSmp];
 	Statistic stats;

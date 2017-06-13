@@ -25,10 +25,11 @@ private:
 public:
 	Audio(Input& input);
 
+	// Blocks until new sample
 	AudioData ReadAudio(Plot* plot);
 
 // private:
-	void SetDecay(uint decay);
+	//void SetDecay(uint decay);
 	float SampleAudioValues(uint binStart, uint binEnd);
 	float SampleAudioValues();
 };
