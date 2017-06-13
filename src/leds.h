@@ -28,7 +28,8 @@ struct Led
 	uint iFace; // 0-5
 	uint iFacePolar; // 0-10
 	vec3 zpt;
-	float lat, lon;
+	float frPolar;
+	float rad;
 };
 
 class LedStrip

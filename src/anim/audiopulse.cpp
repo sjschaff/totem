@@ -109,6 +109,29 @@ struct AnimRing : public Anim
 	}
 };
 
+struct AnimYRing
+{
+	void Display(LedStrip& strip, Frame frame, float phase)
+	{
+		ForEachLed(iLed)
+		{
+			Led led = strip.leds[iLed];
+			Colr colr = Colr::Black;
+
+			if (led.rad > 50)
+			{
+				float width = mapfr(frame.knobC, .01, .2);
+			//	phase = frame.knobB;
+				float dist = modDelta(phase, led.frPolar) / width;
+				float intens = smoothstepDual(dist);
+				colr = Colr::Hue(1.f/12.f) * intens;
+			}
+
+			strip.SetColor(iLed, colr);
+		}
+	}
+};
+
 struct AnimRings
 {
 	uint iPhase = 0;
@@ -120,22 +143,23 @@ struct AnimRings
 		//if (frame.audio.isBeginBeat)
 			//iPhase = (iPhase + 1) % 4;
 
-			bool isLoud = frame.audio.isBeat;
-			if (isLoud)
+		bool isLoud = frame.audio.isBeat;
+		if (isLoud)
+		{
+			//audio = 1;
+			if (!wasLoud)
 			{
-				//audio = 1;
-				if (!wasLoud)
-				{
-					iPhase = (iPhase + 1) % 6;
-					iPhaseTop = (iPhaseTop + 1) % 12;
-					wasLoud = true;
-				}
+				iPhase = (iPhase + 1) % 6;
+				iPhaseTop = (iPhaseTop + 1) % 12;
+				wasLoud = true;
 			}
-			else
-			{
-				//audio = 0;
-				wasLoud = false;
-			}
+		}
+		else
+		{
+			//audio = 0;
+			wasLoud = false;
+		}
+
 		ForEachLed(iLed)
 		{
 			Led led = strip.leds[iLed];
@@ -178,6 +202,17 @@ struct AnimRings
 AudioPulse::AudioPulse(LedStrip& strip, Input& input)
 	: Mode(strip, input)
 {
+	anims.push_back(
+
+	new AnimSmp<PhasePulse, AnimYRing>(
+		PhasePulse(.25, 2), // TODO Slow speed for this is perfect for chill mode
+		AnimYRing()));
+
+	anims.push_back(
+		new AnimSmp<PhaseLinear, AnimYRing>(
+			PhaseLinear(4000),
+			AnimYRing()));
+
 	anims.push_back(
 		new AnimSmp<PhaseLinear, AnimRings>(
 			PhaseLinear(1000),

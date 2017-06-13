@@ -66,6 +66,8 @@ namespace StripBuilder
 		led.iFace = iFace;
 		led.iFacePolar = iFacePolar;
 		led.zpt = xfm * vec4(ledFace.pt.x, 0, -ledFace.pt.y, 1);
+		led.frPolar = atan2(led.zpt.z, led.zpt.x) / (2*PI);
+		led.rad = sqrt(led.zpt.z*led.zpt.z + led.zpt.x*led.zpt.x);
 		return led;
 	}
 
