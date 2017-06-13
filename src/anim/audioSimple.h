@@ -2,21 +2,9 @@
 #define audiosimple_h
 
 #include <list>
+#include <vector>
 #include "anim.h"
 #include "leds.h"
-
-class AudioSimple : public Mode
-{
-private:
-	uint frame = 0;
-	bool wasLoud = false;
-
-	void LightStrip(float audio, bool isLoud);
-
-public:
-	AudioSimple(LedStrip& strip, Input& input);
-	void Update(ulong ms, float audio, bool isBeat, bool isBeginBeat);
-};
 
 struct Beat
 {
@@ -28,17 +16,17 @@ struct Beat
 class AudioPulse : public Mode
 {
 private:
-	uint iLed;
 	std::list<Beat> beats;
-
-	ulong msPrev;
-	ulong msPhase;
+	std::vector<Anim*> anims;
+	uint iAnim;
 
 	void Spin(float phase, float audio, bool isBeat);
 
 public:
 	AudioPulse(LedStrip& strip, Input& input);
-	void Update(ulong ms, float audio, bool isBeat, bool isBeginBeat);
+	void Update(Frame frame);
+
+	void OnPressE();
 };
 
 #endif

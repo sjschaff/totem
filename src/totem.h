@@ -28,15 +28,15 @@ public:
 
 	Mode* mode;
 
-	void OnPressA() {OnPress('A');}
-	void OnPressB() {OnPress('B');}
-	void OnPressC() {OnPress('C');}
-	void OnPressD() {OnPress('D');}
-	void OnPressE() {OnPress('E');}
-	void OnPressF() {OnPress('F');}
+	void OnPressA() {OnPress('A'); mode->OnPressA();}
+	void OnPressB() {OnPress('B'); mode->OnPressB();}
+	void OnPressC() {OnPress('C'); mode->OnPressC();}
+	void OnPressD() {OnPress('D'); mode->OnPressD();}
+	void OnPressE() {OnPress('E'); mode->OnPressE();}
+	void OnPressF() {OnPress('F'); mode->OnPressF();}
 
 	Totem() :
-		log(true), plot(true),
+		log(true), plot(false),
 		input(this), audio(input)
 	{
 		mode = new AudioPulse(strip, input);
@@ -63,9 +63,13 @@ public:
 			//plot.knobC = dec;
 			//	audio.SetDecay(dec);
 
-		bool isBeat, isBeginBeat;
-		float energy = audio.GetEnergy(isBeat, isBeginBeat, &plot);
-		mode->Update(millis, energy, isBeat, isBeginBeat);
+		Frame frame;
+		frame.audio = audio.ReadAudio(&plot);
+		frame.knobB = input.ReadB();
+		frame.knobC = input.ReadC();
+		frame.ms = millis;
+		millis = 0;
+		mode->Update(frame);
 		delay(23); // TODO?
 
 		//spin();

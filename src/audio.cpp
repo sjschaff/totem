@@ -12,7 +12,7 @@ static const uint cSmp = 43;
 static volatile uint iSmp = 0;
 static volatile float samples[cSmp];
 
-static  uint decay = 2;//1;
+static uint decay = 2;//1;
 
 static Audio* audio;
 void sampleAudio()
@@ -88,7 +88,7 @@ float Audio::SampleAudioValues(uint binStart, uint binEnd)
 	return 1024.f * accum / (binEnd - binStart);
 }
 
-float Audio::GetEnergy(bool& isBeat, bool& isBeginBeat, Plot* _plot)
+AudioData Audio::ReadAudio(Plot* _plot)
 {
 	Plot& plot = *_plot;
 	float energy = samples[iSmp];
@@ -113,8 +113,8 @@ float Audio::GetEnergy(bool& isBeat, bool& isBeginBeat, Plot* _plot)
 //		samples[(iSmp + cSmp - 2) % cSmp] * .1;
 	bool isLoud = energy > threshold;
 
-	isBeat = true;
-	isBeginBeat = false;
+	bool isBeat = true;
+	bool isBeginBeat = false;
 	bool wasBeat = (millis - msLastBeat) < msPerBeat;
 
 	if (isLoud)
@@ -139,9 +139,14 @@ float Audio::GetEnergy(bool& isBeat, bool& isBeginBeat, Plot* _plot)
 	plot.smoothed = threshold;
 	plot.plot();
 
-	return saturate((millis - msLastBeat) / (4.f*msPerBeat));
-	return dmap(energy,
+	AudioData audio;
+	audio.energy = energy;
+	audio.isBeat = isBeat;
+	audio.isBeginBeat = isBeginBeat;
+	audio.energy = dmap(energy,
 		avg - (smoothed - avg),
 		smoothed,
-		.2, 1);
+		.2, 1); // TODO dafuq??
+	audio.beatFalloff = saturate((millis - msLastBeat) / (4.f*msPerBeat));
+	return audio;
 }

@@ -5,6 +5,14 @@
 
 class Plot;
 
+struct AudioData
+{
+	float energy;
+	bool isBeat;
+	bool isBeginBeat;
+	float beatFalloff; // TODO: extract to parameterizable?
+};
+
 class Audio
 {
 private:
@@ -17,7 +25,7 @@ private:
 public:
 	Audio(Input& input);
 
-	float GetEnergy(bool& isBeat, bool& isBeginBeat, Plot* plot);
+	AudioData ReadAudio(Plot* plot);
 
 // private:
 	void SetDecay(uint decay);
