@@ -148,16 +148,27 @@ struct AnimRings
 			intens = 1 - saturate(dist);
 			strip.SetColor(iLed, Colr::Green * intens);*/
 			//uint iPhase = phase * 3.999;
+			uint iFaceTop = (uint)(phase * 4.999) % 5;
+			float frIFaceTop = frac(phase*4.999);
+			float hue = iPhaseTop / 6.f;
 			if (led.face.iRing > 3)
 			{
-				float hue = led.iFacePolar / 10.f;
-				hue +=  iPhaseTop / 6.f;
+				uint iFaceOut = iFaceTop;
+				uint iFaceIn = (iFaceTop + 1) % 5;
+
 				if (led.face.iRing == 6)
 					hue += .5;
 
 				colr = Colr::Hue(hue);
+				float smth = smoothstep(frIFaceTop); // move out of loop
+				if (led.iFace == iFaceOut)
+					colr *= 1 - smth;
+				else if (led.iFace == iFaceIn)
+					colr *= smth;
+				else
+					colr = Colr::Black;
 			} else if (led.face.iRing == (iPhase % 3))
-				colr = Colr::Hue(1.f/3.f + (iPhase % 2)*.5) * frame.audio.energy;
+				colr = Colr::Hue(hue + (iPhase % 2)*.5) * frame.audio.energy;
 
 			strip.SetColor(iLed, colr);
 		}
@@ -169,7 +180,7 @@ AudioPulse::AudioPulse(LedStrip& strip, Input& input)
 {
 	anims.push_back(
 		new AnimSmp<PhaseLinear, AnimRings>(
-			PhaseLinear(600),
+			PhaseLinear(1000),
 			AnimRings()));
 
 	anims.push_back(new AnimRing());
