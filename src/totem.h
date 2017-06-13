@@ -24,6 +24,8 @@ public:
 	LedStrip strip;
 	Audio audio;
 
+	// State
+	elapsedMillis millis;
 	Mode* mode;
 
 	void OnPressA() {OnPress('A'); mode->OnPressA();}
@@ -48,31 +50,22 @@ public:
 			<< input.ReadC() << "].\n";
 	}
 
-	// State
-	elapsedMillis millis;
-
 	void loop()
 	{
-			//uint dec = (uint)input.ReadC(1, 10);
-			//plot.knobC = dec;
-			//	audio.SetDecay(dec);
 		Frame frame;
 		frame.audio = audio.ReadAudio(&plot); // Block until new audio data
 		frame.ms = millis;
 		millis = 0;
 
 		input.PollInput();
+		frame.knobA = input.ReadA();
 		frame.knobB = input.ReadB();
 		frame.knobC = input.ReadC();
 
 		// TODO: move to modes?
-		strip.SetBrightness(input.ReadA(.2, .85)); // TODO make anims more sparing with simultaneous lit leds
+		strip.SetBrightness(mapfr(frame.knobA, .2, .85)); // TODO make anims more sparing with simultaneous lit leds
 
 		mode->Update(frame);
-
-		//spin();
-		//displayAudio();
-		//breathe();
 	}
 
 	void spin()

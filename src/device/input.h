@@ -28,11 +28,11 @@ public:
 	void PollInput();
 
 	uint AnalogReadInt(uint pin, uint bitsPrecision);
-	float AnalogRead(uint pin, float min, float max);
+	float AnalogRead(uint pin);
 
-	float ReadA(float min = 0, float max = 1);
-	float ReadB(float min = 0, float max = 1);
-	float ReadC(float min = 0, float max = 1);
+	float ReadA();
+	float ReadB();
+	float ReadC();
 };
 
 #endif

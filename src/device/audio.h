@@ -30,8 +30,7 @@ public:
 
 // private:
 	//void SetDecay(uint decay);
-	float SampleAudioValues(uint binStart, uint binEnd);
-	float SampleAudioValues();
+	void SampleAudioValues(float* samplesOut/*[cChannel]*/);
 };
 
 #endif

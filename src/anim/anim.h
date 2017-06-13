@@ -66,6 +66,7 @@ public:
 struct Frame
 {
 	ulong ms;
+	float knobA;
 	float knobB;
 	float knobC;
 	AudioData audio;
