@@ -206,6 +206,25 @@ struct AnimRings
 	}
 };
 
+
+// vertical pulse (rings moving up)
+// rnd face pulse (color+compl on inner outer rings)
+// TODO Shimmer type effect -> random leds on/off
+// TODO revive breathe, add to Chill Mode
+
+// buttons:
+// next mode
+// rage mode?
+// disable knobs
+// per mode:
+// 	next color
+// 	next anim
+// 	color mode -> random, fixed dual, fixed single, rainbow?
+
+// knobs
+// brightness
+// color
+
 AudioPulse::AudioPulse(LedStrip& strip, Input& input)
 	: Mode(strip, input)
 {
@@ -216,12 +235,12 @@ AudioPulse::AudioPulse(LedStrip& strip, Input& input)
 
 	anims.push_back(
 		new AnimSmp<PhasePulse, AnimYRing>(
-			PhasePulse(.125, 1), // TODO Slow speed for this is perfect for chill mode
+			PhasePulse(.125, .5), // TODO Slow speed for this is perfect for chill mode
 			AnimYRing()));
 
 	anims.push_back(
 		new AnimSmp<PhasePulse, AnimYRing>(
-			PhasePulse(.25, 2), // TODO Slow speed for this is perfect for chill mode
+			PhasePulse(.25, 2), // TODO Slow speed for this is perfect for chill mode (account for 4x tho)
 			AnimYRing()));
 
 
