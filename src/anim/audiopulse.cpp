@@ -1,4 +1,4 @@
-#include "audioSimple.h"
+#include "audiopulse.h"
 #include "log.h"
 
 Beat::Beat(ulong msStart) : msStart(msStart) {}
@@ -12,7 +12,10 @@ struct AnimSpin
 			Led led = strip.leds[iLed];
 
 			if (led.face.iRing != 2 && led.face.iRing != 1)
+			{
+				strip.SetColor(iLed, Colr::Black);
 				continue;
+			}
 
 			Colr colr = Colr::Blue;
 			float sf = 1.8;//4 * input.ReadC();
@@ -86,13 +89,18 @@ public:
 		strip.SetStripColor(colr);
 	}
 };
+/*
+struct AnimRings : public Anim
+{
+
+};*/
 
 AudioPulse::AudioPulse(LedStrip& strip, Input& input)
 	: Mode(strip, input)
 {
 	anims.push_back(
 		new AnimSmp<PhasePulse, AnimSpin>(
-			PhasePulse(.5, .4),
+			PhasePulse(.5, 4),
 			AnimSpin()));
 	anims.push_back(new AnimFlash());
 	iAnim = 0;

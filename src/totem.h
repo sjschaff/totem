@@ -4,7 +4,7 @@
 #include "leds.h"
 #include "plot.h"
 #include "log.h"
-#include "anim/audiosimple.h"
+#include "anim/audiopulse.h"
 
 // TODO
 /*
