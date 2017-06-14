@@ -49,6 +49,7 @@ class AudioPulse : public LightshowMode
 {
 public:
 	AudioPulse(LedStrip& strip);
+	void Update(Frame frame);
 };
 
 class Chillax : public LightshowMode

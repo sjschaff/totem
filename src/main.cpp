@@ -11,11 +11,12 @@ void initRand()
 // Cause fuck that globals shit
 //Main main;
 void setup() {
-	Totem totem;
 	delay(100);
-	initRand();
+	//initRand();
+	Totem* totem = new Totem();
+	delay(100);
 	while (1) {
-		totem.loop();
+		totem->loop();
 		yield();
 	}
 }

@@ -17,6 +17,7 @@ template<class TPhase>
 class PhaseAnim : public Anim
 {
 private:
+public:
 	TPhase phase;
 
 protected:

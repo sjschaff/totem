@@ -24,8 +24,9 @@ public:
 struct PhasePulse : public Phase
 {
 private:
-	const float sfOffBeat;
-	const float sfBeat;
+public:
+	 float sfOffBeat;
+	 float sfBeat;
 
 public:
 	PhasePulse(float sfOffBeat, float sfBeat);

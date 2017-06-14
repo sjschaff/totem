@@ -10,9 +10,9 @@ void LighthouseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phase)
 		Led led = strip.leds[iLed];
 		Colr colr = Colr::Black;
 
-		if (led.rad > 50)
+		//if (led.rad > 50)
+		if (led.face.iRing < 6)
 		{
-			float width = .2;
 		//	phase = frame.knobB;
 			float distA = modDelta(phase, led.frPolar) / width;
 			float distB = modDelta(frac(phase + .5), led.frPolar) / width;
@@ -37,8 +37,8 @@ void LighthouseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phase)
 	}
 }
 
-AnimLighthouse::AnimLighthouse(float duration)
-	: LighthouseBase(PhaseLinear(duration)) {}
+AnimLighthouse::AnimLighthouse(float width, float duration)
+	: LighthouseBase(width, PhaseLinear(duration)) {}
 
-AnimLighthousePulse::AnimLighthousePulse(PhasePulse phase)
-	: LighthouseBase(phase) {}
+AnimLighthousePulse::AnimLighthousePulse(float width, PhasePulse phase)
+	: LighthouseBase(width, phase) {}

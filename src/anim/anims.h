@@ -25,8 +25,13 @@ public:
 template<class TPhase>
 class LighthouseBase : public PhaseAnim<TPhase>
 {
+private:
+	public:
+	float width;
+
 protected:
-	LighthouseBase(TPhase phase) : PhaseAnim<TPhase>(phase) {}
+	LighthouseBase(float width, TPhase phase)
+		: PhaseAnim<TPhase>(phase), width(width) {}
 
 public:
 	void Display(LedStrip& strip, Frame frame, float phase);
@@ -35,20 +40,20 @@ public:
 class AnimLighthouse : public LighthouseBase<PhaseLinear>
 {
 public:
-	AnimLighthouse(float duration);
+	AnimLighthouse(float width, float duration);
 };
 
 class AnimLighthousePulse : public LighthouseBase<PhasePulse>
 {
 public:
-	AnimLighthousePulse(PhasePulse phase);
+	AnimLighthousePulse(float width, PhasePulse phase);
 };
 
 template<class TPhase>
 class AnimVertPulseBase : public PhaseAnim<TPhase>
 {
 protected:
-	const float width;
+	float width;
 	AnimVertPulseBase(float width, TPhase phase)
 		: PhaseAnim<TPhase>(phase), width(width) {}
 

@@ -2,6 +2,7 @@
 #include "anim/anims.h"
 
 // Main TODO:
+// - mirror versions of all spinning type animations
 // - auto anim switching + auto color switching
 // 		- buttons to cycle
 // - animation transitions
@@ -17,7 +18,6 @@
 // - disable knobs?
 // - Manual anim+color selection mode for audiopulse?
 // - fix battery pack
-// - tune vert pulse, tune lighthouse (try using beats to widen lighthouse instead of pulse it)
 // - tune color pulse
 
 
@@ -25,10 +25,6 @@
 // TODO Shimmer type effect -> random leds on/off
 // Colr offset takes phase and color and offsets frColr by phase
 // Beat offset? takes frame and color and offsets iColr by beatCounter (+1, or +0)?
-// Tip Anims:
-	// Tip loop (loop wit beat?)
-	// Tip Flicker
-	// Tip Flash wit beat
 
 // Global frPolar rainbow looks sick, would make good lighthouse type effect
 
@@ -41,6 +37,7 @@
 //  -bias anims/colors to be used more often
 //  -fancier combinitorial phase/param/anim system
 //  -make flickering part of color for better combinitorial?
+//  -try using beats to widen lighthouse instead of pulse it
 
 // buttons:
 // next mode
@@ -106,28 +103,25 @@ public:
 	}
 };
 
+AnimLighthousePulse* pulse;
+void AudioPulse::Update(Frame frame)
+{
+	//pulse->phase.sfOffBeat = mapfr(frame.knobB, 0, .4); // .136, .064
+	//pulse->phase.sfBeat = mapfr(frame.knobC, .1, .7); // .5
+	LightshowMode::Update(frame);
+}
+
 AudioPulse::AudioPulse(LedStrip& strip)
 	: LightshowMode(strip)
 {
-	// WIP
-
-	// TODO needs tuning
-	// (pre phasex2) was .1, 4.5.  good but flickery
-	anims.push_back(new AnimVertPulse(.126, PhasePulse(.3, 7)));
-
-	// TODO needs tuning
-	anims.push_back(new AnimLighthousePulse(PhasePulse(.125, .5)));
-	anims.push_back(new AnimLighthousePulse(PhasePulse(.25, 2))); // TODO Slow speed for this is perfect for chill mode (account for 4x tho)
-
-
-
-
-
 	// THESE ARE DOPE
-/*	anims.push_back(new AnimSpin());
+	anims.push_back(new AnimSpin());
 	anims.push_back(new AnimFlash());
-	anims.push_back(new AnimRings(1000));*/
+	anims.push_back(new AnimRings(1000));
+	anims.push_back(new AnimVertPulse(.126, PhasePulse(.1, 2.7)));
+	anims.push_back(new AnimLighthousePulse(.1325, PhasePulse(.064, .424)));
 
+	tipAnims.push_back(new AnimNoop(false));
 	tipAnims.push_back(new TipPulse());
 	tipAnims.push_back(new TipFlash(FlashMode::Toggle));
 	tipAnims.push_back(new TipFlash(FlashMode::Fade));
