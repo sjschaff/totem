@@ -4,9 +4,6 @@
 // Main TODO:
 // - auto anim switching + auto color switching
 // 		- buttons to cycle
-// - leds should just ignore row 3 :( to save on power
-// - Separate Tip Anims
-// 		- needs anim overlay
 // - animation transitions
 //		- random duration around ~15-30 secs?
 // 		- needs anim overlay
@@ -20,7 +17,8 @@
 // - disable knobs?
 // - Manual anim+color selection mode for audiopulse?
 // - fix battery pack
-// - tune vert pulse, tune tip pulse, tune lighthouse (try using beats to widen lighthouse instead of pulse it)
+// - tune vert pulse, tune lighthouse (try using beats to widen lighthouse instead of pulse it)
+// - tune color pulse
 
 
 // rnd face pulse (color+compl on inner outer rings)
@@ -35,7 +33,9 @@
 // Global frPolar rainbow looks sick, would make good lighthouse type effect
 
 // Some day:
+//  -automatic brightness adjustment based on power consumption to prevent overdraw
 //	-randomize what value anims use for color phase
+//  -randomize phase inputs to colors (also anims?) (i.e rainbow pulse vs rainbow linear)
 //	-different anims for different audio freqs
 //	-animation have prefered color schemes/types
 //  -bias anims/colors to be used more often
@@ -113,20 +113,20 @@ AudioPulse::AudioPulse(LedStrip& strip)
 
 	// TODO needs tuning
 	// (pre phasex2) was .1, 4.5.  good but flickery
-	/*anims.push_back(new AnimVertPulse(.126, PhasePulse(.3, 7)));
+	anims.push_back(new AnimVertPulse(.126, PhasePulse(.3, 7)));
 
 	// TODO needs tuning
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.125, .5)));
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.25, 2))); // TODO Slow speed for this is perfect for chill mode (account for 4x tho)
-*/
+
 
 
 
 
 	// THESE ARE DOPE
-	anims.push_back(new AnimSpin());
+/*	anims.push_back(new AnimSpin());
 	anims.push_back(new AnimFlash());
-	anims.push_back(new AnimRings(1000));
+	anims.push_back(new AnimRings(1000));*/
 
 	tipAnims.push_back(new TipPulse());
 	tipAnims.push_back(new TipFlash(FlashMode::Toggle));
@@ -145,12 +145,15 @@ AudioPulse::AudioPulse(LedStrip& strip)
 
 
 
-
+// TODO this could prob go slower
+	colrs.push_back(new ColrRainbowPulseDual(PhasePulse(.1, .8)));
 
 	colrs.push_back(new ColrPair(Colr::Blue, Colr::Red));
 	colrs.push_back(new ColrPair(Colr::Purple, Colr::Green));
 	colrs.push_back(new ColrRainbow());
 	colrs.push_back(new ColrRainbowPulse(PhasePulse(.1, .8)));
+
+	// TODO this could prob go quicker
 	colrs.push_back(new ColrGradPulse(
 		PhasePulse(.1, .8),
 		ColrGrad(Colr::Blue, Colr::Red)));

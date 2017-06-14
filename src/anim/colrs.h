@@ -80,10 +80,23 @@ public:
 	}
 };
 
+
 class ColrRainbowPulse : public ColrPhase<PhasePulse, ColrRainbow>
 {
 public:
 	ColrRainbowPulse(PhasePulse phase);
+};
+
+class ColrRainbowDual : public ColrStatic
+{
+public:
+	Colr GetColr(int iColr, float frColr);
+};
+
+class ColrRainbowPulseDual : public ColrPhase<PhasePulse, ColrRainbowDual>
+{
+public:
+	ColrRainbowPulseDual(PhasePulse phase);
 };
 
 class ColrGradPulse : public ColrPhase<PhaseBounce<PhasePulse>, ColrGrad>

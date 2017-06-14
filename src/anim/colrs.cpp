@@ -47,6 +47,14 @@ Colr ColrRainbow::GetColr(int iColr, float frColr)
 ColrRainbowPulse::ColrRainbowPulse(PhasePulse phase)
 	: ColrPhase<PhasePulse, ColrRainbow>(phase, ColrRainbow()) {}
 
+ColrRainbowPulseDual::ColrRainbowPulseDual(PhasePulse phase)
+	: ColrPhase<PhasePulse, ColrRainbowDual>(phase, ColrRainbowDual()) {}
+
+Colr ColrRainbowDual::GetColr(int iColr, float frColr)
+{
+	float hue = (iColr % 2) == 1 ? frColr + .5 : frColr;
+	return Colr::Hue(hue);
+}
 
 ColrGradPulse::ColrGradPulse(PhasePulse phase, ColrGrad grad)
 	: ColrPhase<PhaseBounce<PhasePulse>, ColrGrad>(PhaseBounce<PhasePulse>(phase), grad) {}
