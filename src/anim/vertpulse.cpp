@@ -6,6 +6,8 @@ void AnimVertPulseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phas
 	const float frGap = 0;//.2; // TODO: param
 	const float frPulse = 1 - frGap;
 
+	uint iPhase = phase > .5 ? 1 : 0;
+	phase = frac(phase * 2);
 	//float maxY = 233; => 1
 
 	// .116 seems to be good min for smoothness
@@ -21,9 +23,9 @@ void AnimVertPulseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phas
 		// TODO make smoothstep dual
 		float height = dmap(sin(theta), -1, 1, -width, 1+width);
 
-		Colr colr = Colr::Green;
 		ForEachLed(iLed) {
 			Led led = strip.leds[iLed];
+			Colr colr = frame.colr->GetColr(iPhase, phase, led.frPolar);
 
 			// TODO:make helper function for this very common case
 			float intens = smoothstepDual((led.frY - height)/width);

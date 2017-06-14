@@ -15,13 +15,23 @@ void LighthouseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phase)
 		{
 			float width = .2;
 		//	phase = frame.knobB;
-			float dist = modDelta(phase, led.frPolar) / width;
+			float distA = modDelta(phase, led.frPolar) / width;
+			float distB = modDelta(frac(phase + .5), led.frPolar) / width;
+			float dist;
+			uint iColr;
+			if (distA <= .5)
+			{
+				iColr = 0;
+				dist = distA;
+			}
+			else
+			{
+				iColr = 1;
+				dist = distB;
+			}
+
 			float intens = smoothstepDual(dist);
-			colr =
-				Colr::Lerp(
-					Colr::Hue(1.f/24.f),
-					Colr::Hue(1.f/24.f +.5f),
-					frHue) * intens;
+			colr = frame.colr->GetColr(iColr, phaseColor, led.frY) * intens;
 		}
 
 		strip.SetColor(iLed, colr);

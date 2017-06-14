@@ -1,6 +1,6 @@
 #include "colr.h"
 
-// nice orange Colr::Hue(1.f/12.f) 
+// nice orange Colr::Hue(1.f/12.f)
 const Colr Colr::Red = Colr(1, 0, 0);
 const Colr Colr::Yellow = Colr(1, 1, 0);
 const Colr Colr::Green = Colr(0, 1, 0);
@@ -26,7 +26,7 @@ void Colr::operator*=(float v)
 
 Colr Colr::gammaCorrect()
 {
-	return Colr( gamma(r), gamma(g), gamma(b));
+	return Colr( gamma(r), gamma(g), gamma(b)*.8);
 }
 
 Colr Colr::Lerp(Colr a, Colr b, float fr)
