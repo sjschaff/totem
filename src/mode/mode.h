@@ -16,7 +16,7 @@ public:
 	virtual void Update(Frame frame) = 0;
 
 	void OnPressA();
-	
+
 	virtual void OnPressB();
 	virtual void OnPressC();
 	virtual void OnPressD();
@@ -37,13 +37,16 @@ class LightshowMode : public Mode
 protected:
 	std::list<Beat> beats;
 	std::vector<Anim*> anims;
+	std::vector<ColrAnim*> colrs;
 	uint iAnim;
+	uint iColr;
 
 	LightshowMode(LedStrip& strip);
 
 public:
 	void Update(Frame frame);
 	void OnPressE();
+	void OnPressF();
 };
 
 class AudioPulse : public LightshowMode

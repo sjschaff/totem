@@ -11,7 +11,7 @@ void Mode::OnPressE() {}
 void Mode::OnPressF() {}
 
 LightshowMode::LightshowMode(LedStrip& strip)
-	: Mode(strip), iAnim(0) {}
+	: Mode(strip), iAnim(0), iColr(0) {}
 
 void LightshowMode::Update(Frame frame)
 {
@@ -21,6 +21,7 @@ void LightshowMode::Update(Frame frame)
 	if (frame.audio.isBeginBeat)
 		beats.push_back(Beat(frame.ms));
 
+	frame.colr = colrs[iColr];
 	Anim* anim = anims[iAnim];
 	anim->Update(strip, frame);
 	strip.Show();
@@ -29,4 +30,9 @@ void LightshowMode::Update(Frame frame)
 void LightshowMode::OnPressE()
 {
 	iAnim = (iAnim + 1) % anims.size();
+}
+
+void LightshowMode::OnPressF()
+{
+	iColr = (iColr + 1) % colrs.size();
 }

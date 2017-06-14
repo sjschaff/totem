@@ -80,6 +80,16 @@ public:
 
 // rnd face pulse (color+compl on inner outer rings)
 // TODO Shimmer type effect -> random leds on/off
+// Colr offset takes phase and color and offsets frColr by phase
+// Beat offset? takes frame and color and offsets iColr by beatCounter (+1, or +0)?
+// Tip Anims:
+	// Tip loop
+	// Tip Flicker
+	// Tip Flash wit beat
+
+// Global frPolar rainbow looks sick, would make good lighthouse type effect
+
+// Some day: randomize what value anims use for color phase
 
 // buttons:
 // next mode
@@ -97,12 +107,22 @@ public:
 AudioPulse::AudioPulse(LedStrip& strip)
 	: LightshowMode(strip)
 {
+	anims.push_back(new AnimSpin());
+	anims.push_back(new AnimFlash());
+
 	// was .1, 4.5.  good but flickery
 	anims.push_back(new AnimVertPulse(.126, PhasePulse(.15, 3.5)));
 
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.125, .5)));
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.25, 2))); // TODO Slow speed for this is perfect for chill mode (account for 4x tho)
 	anims.push_back(new AnimRings(1000));
-	anims.push_back(new AnimSpin());
-	anims.push_back(new AnimFlash());
+
+	colrs.push_back(new ColrPair(Colr::Blue, Colr::Red));
+	colrs.push_back(new ColrPair(Colr::Purple, Colr::Green));
+	colrs.push_back(new ColrRainbow());
+	colrs.push_back(new ColrGrad(Colr::Blue, Colr::Red));
+
+
+//	colrs.push_back(new ColrPair(Colr::Blue, Colr::Green));
+
 }

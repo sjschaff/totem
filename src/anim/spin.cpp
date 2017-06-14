@@ -14,7 +14,8 @@ void AnimSpin::Display(LedStrip& strip, Frame frame, float phase)
 			continue;
 		}
 
-		Colr colr = Colr::Blue;
+		int iColr = 0;
+
 		float sf = 1.8;//4 * input.ReadC();
 		float delta = led.face.frPolarDelta;
 		float polar = led.face.frPolar;
@@ -22,8 +23,10 @@ void AnimSpin::Display(LedStrip& strip, Frame frame, float phase)
 		{
 				sf *= 1;
 				polar = 1 - polar;
-				colr = Colr::Red;
+				iColr = 1;
 		}
+
+		Colr colr = frame.colr->GetColr(iColr, phase);
 
 		float width = sf*delta;
 		float dist = modDelta(phase, polar) / width;

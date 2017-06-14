@@ -3,6 +3,7 @@
 
 #include "anim.h"
 
+// Prefers dual color
 class AnimSpin : public PhaseAnim<PhasePulse>
 {
 public:
