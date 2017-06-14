@@ -22,6 +22,7 @@ void LightshowMode::Update(Frame frame)
 		beats.push_back(Beat(frame.ms));
 
 	frame.colr = colrs[iColr];
+	frame.colr->Update(frame);
 	Anim* anim = anims[iAnim];
 	anim->Update(strip, frame);
 	strip.Show();

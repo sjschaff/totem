@@ -26,7 +26,7 @@ void AnimSpin::Display(LedStrip& strip, Frame frame, float phase)
 				iColr = 1;
 		}
 
-		Colr colr = frame.colr->GetColr(iColr, phase);
+		Colr colr = frame.colr->GetColr(iColr, phase, 0);
 
 		float width = sf*delta;
 		float dist = modDelta(phase, polar) / width;

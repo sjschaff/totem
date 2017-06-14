@@ -23,7 +23,8 @@ void AnimFlash::Update(LedStrip& strip, Frame frame)
 	ForEachLed(iLed)
 	{
 		Led led = strip.leds[iLed];
-		Colr colr = frame.colr->GetColr(iColr, led.face.frPolar);
+		float frColStatic = led.face.frRad <= 1 ? led.face.frRad : (3 - led.face.frRad) / 2.f;
+		Colr colr = frame.colr->GetColr(iColr, frColStatic, 0);
 		colr *= frame.audio.energy * .75;
 		strip.SetColor(iLed, colr);
 	}

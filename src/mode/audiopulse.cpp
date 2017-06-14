@@ -107,7 +107,7 @@ public:
 AudioPulse::AudioPulse(LedStrip& strip)
 	: LightshowMode(strip)
 {
-	anims.push_back(new AnimSpin());
+	//anims.push_back(new AnimSpin());
 	anims.push_back(new AnimFlash());
 
 	// was .1, 4.5.  good but flickery
@@ -120,9 +120,12 @@ AudioPulse::AudioPulse(LedStrip& strip)
 	colrs.push_back(new ColrPair(Colr::Blue, Colr::Red));
 	colrs.push_back(new ColrPair(Colr::Purple, Colr::Green));
 	colrs.push_back(new ColrRainbow());
-	colrs.push_back(new ColrGrad(Colr::Blue, Colr::Red));
+	colrs.push_back(new ColrRainbowPulse(PhasePulse(.1, .8)));
+	colrs.push_back(new ColrGradPulse(
+		PhasePulse(.1, .8),
+		ColrGrad(Colr::Blue, Colr::Red)));
 
 
-//	colrs.push_back(new ColrPair(Colr::Blue, Colr::Green));
+	colrs.push_back(new ColrPair(Colr::Blue, Colr::Green));
 
 }
