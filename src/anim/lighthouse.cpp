@@ -4,7 +4,6 @@ template<class TPhase>
 void LighthouseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phase)
 {
 	float phaseColor = phase;
-	float frHue = smoothstepDual(phaseColor*2 - 1);
 	phase = frac(phase*4);
 	ForEachLed(iLed)
 	{

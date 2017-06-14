@@ -114,3 +114,37 @@ void TipPulse::Display(LedStrip& strip, Frame frame, float phase)
 		}
 	}
 }
+
+TipFlash::TipFlash(FlashMode flashMode) : flashMode(flashMode) {}
+
+void TipFlash::Update(LedStrip& strip, Frame frame)
+{
+	float intens = 0;
+	switch (flashMode)
+	{
+		case Toggle:
+			if (frame.audio.isBeginBeat)
+				toggle = !toggle;
+			intens = toggle ? 1 : 0;
+			break;
+
+		case Fade:
+			intens = frame.audio.beatFalloff;
+			break;
+
+		case Flicker:
+			intens = frame.audio.energy;
+			break;
+	}
+
+	ForEachLed(iLed)
+	{
+		Led led = strip.leds[iLed];
+		if (led.face.iRing > 3)
+		{
+			uint iColr = led.face.iRing == 6 ? 1 : 0;
+			Colr colr = frame.colr->GetColr(iColr, led.frPolar, 0);
+			strip.SetColor(iLed, colr*intens);
+		}
+	}
+}

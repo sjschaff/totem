@@ -1,5 +1,11 @@
 #include "util.h"
 
+float randfr()
+{
+	// everything seemed to be random?
+	return abs(random(2 << 30) / (float)(2<<30));
+}
+
 float gamma(float v)
 {
   return pow(v, 2.2);

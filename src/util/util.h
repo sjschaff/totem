@@ -13,6 +13,8 @@ typedef uint16 ushort;
 //typedef uint32 uint;
 //typedef uint64 ulong;
 
+float randfr();
+
 #ifndef PI
 #define PI 3.141592
 #endif

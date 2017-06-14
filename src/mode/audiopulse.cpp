@@ -9,7 +9,8 @@ Beat::Beat(ulong msStart) : msStart(msStart) {}
 // - leds should just ignore row 3 :( to save on power
 // - Separate Tip Anims
 // 		- needs anim overlay
-// - animation tip transitions
+// - animation transitions
+//		- random duration around ~15-30 secs?
 // 		- needs anim overlay
 // - color modes:
 //		- auto
@@ -21,7 +22,7 @@ Beat::Beat(ulong msStart) : msStart(msStart) {}
 // - disable knobs?
 // - Manual anim+color selection mode for audiopulse?
 // - fix battery pack
-// - tune vert pulse, tune lighthouse (try using beats to widen lighthouse instead of pulse it)
+// - tune vert pulse, tune tip pulse, tune lighthouse (try using beats to widen lighthouse instead of pulse it)
 
 
 // rnd face pulse (color+compl on inner outer rings)
@@ -41,6 +42,7 @@ Beat::Beat(ulong msStart) : msStart(msStart) {}
 //	-animation have prefered color schemes/types
 //  -bias anims/colors to be used more often
 //  -fancier combinitorial phase/param/anim system
+//  -make flickering part of color for better combinitorial?
 
 // buttons:
 // next mode
@@ -94,44 +96,57 @@ AudioPulse::AudioPulse(LedStrip& strip)
 	: LightshowMode(strip)
 {
 	/*anims.push_back(new AnimSpin());
-	anims.push_back(new AnimFlash());
+	anims.push_back(new AnimFlash()); // TODO: worth it?
 
+	// TODO needs tuning
 	// (pre phasex2) was .1, 4.5.  good but flickery
 	anims.push_back(new AnimVertPulse(.126, PhasePulse(.3, 7)));
 
+	// TODO needs tuning
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.125, .5)));
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.25, 2))); // TODO Slow speed for this is perfect for chill mode (account for 4x tho)
 */
 
-	/*anims.push_back(
-		new AnimWithTip<AnimRings TipAnimLoop>(
-			AnimRings(1000),
-			TipAnimLoop(true, 1000))*/
+		/*anims.push_back(
+			new AnimWithTip<AnimRings TipAnimLoop>(
+				AnimRings(1000),
+				TipAnimLoop(true, 1000))*/
 
-	anims.push_back(
-		new AnimWithTip<AnimNoop, TipPulse>(
-			AnimNoop(true),
-			TipPulse()));
+		// TODO needs tuning
+		/*anims.push_back(
+			new AnimWithTip<AnimNoop, TipPulse>(
+				AnimNoop(true),
+				TipPulse()));*/
 
-	anims.push_back(
-		new AnimWithTip<AnimNoop, TipAnimLoop>(
-			AnimNoop(true),
-			TipAnimLoop(StepMode::Loop, 2000)));
+		anims.push_back(
+			new AnimWithTip<AnimNoop, TipFlash>(
+				AnimNoop(true),
+				TipFlash(FlashMode::Toggle)));
+		anims.push_back(
+			new AnimWithTip<AnimNoop, TipFlash>(
+				AnimNoop(true),
+				TipFlash(FlashMode::Fade)));
+		anims.push_back(
+			new AnimWithTip<AnimNoop, TipFlash>(
+				AnimNoop(true),
+				TipFlash(FlashMode::Flicker)));
 
-	anims.push_back(
-		new AnimWithTip<AnimNoop, TipAnimLoop>(
-			AnimNoop(true),
-			TipAnimLoop(StepMode::Step, 2000)));
-
-	anims.push_back(
-		new AnimWithTip<AnimNoop, TipAnimLoop>(
-			AnimNoop(true),
-			TipAnimLoop(StepMode::FadeStep, 2000)));
-
-	anims.push_back(
-		new AnimWithTip<AnimNoop, TipAnimLoop>(
-			AnimNoop(true),
-			TipAnimLoop(StepMode::FlickerStep, 2000)));
+		/*anims.push_back(
+			new AnimWithTip<AnimNoop, TipAnimLoop>(
+				AnimNoop(true),
+				TipAnimLoop(StepMode::Loop, 2000)));
+		anims.push_back(
+			new AnimWithTip<AnimNoop, TipAnimLoop>(
+				AnimNoop(true),
+				TipAnimLoop(StepMode::Step, 2000)));
+		anims.push_back(
+			new AnimWithTip<AnimNoop, TipAnimLoop>(
+				AnimNoop(true),
+				TipAnimLoop(StepMode::FadeStep, 2000)));
+		anims.push_back(
+			new AnimWithTip<AnimNoop, TipAnimLoop>(
+				AnimNoop(true),
+				TipAnimLoop(StepMode::FlickerStep, 2000)));*/
 
 	colrs.push_back(new ColrPair(Colr::Blue, Colr::Red));
 	colrs.push_back(new ColrPair(Colr::Purple, Colr::Green));

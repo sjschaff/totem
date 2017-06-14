@@ -84,6 +84,8 @@ enum StepMode
 	Loop, Step, FadeStep, FlickerStep
 };
 
+
+// TODO tip anims should share colors
 class TipAnimLoop : public PhaseAnim<PhaseLinear>
 {
 private:
@@ -100,11 +102,28 @@ public:
 // TODO share with vert pulse (colrs work differently)
 class TipPulse : public PhaseAnim<PhasePulse>
 {
-private:
 public:
 	TipPulse();//PhasePulse phase);
 
 	void Display(LedStrip& strip, Frame frame, float phase);
+};
+
+enum FlashMode
+{
+	Toggle,
+	Fade,
+	Flicker
+};
+
+class TipFlash : public Anim
+{
+private:
+	const FlashMode flashMode;
+	bool toggle = false;
+
+public:
+	TipFlash(FlashMode flashmode);
+	void Update(LedStrip& strip, Frame frame);
 };
 
 #endif
