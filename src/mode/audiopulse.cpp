@@ -103,11 +103,11 @@ public:
 	}
 };
 
-AnimLighthousePulse* pulse;
+ColrGradPulse* pulse;
 void AudioPulse::Update(Frame frame)
 {
-	//pulse->phase.sfOffBeat = mapfr(frame.knobB, 0, .4); // .136, .064
-	//pulse->phase.sfBeat = mapfr(frame.knobC, .1, .7); // .5
+	//pulse->phase.sfOffBeat = mapfr(frame.knobB, 0, .4); // .1
+	//pulse->phase.sfBeat = mapfr(frame.knobC, 0, .4); // .8
 	LightshowMode::Update(frame);
 }
 
@@ -133,27 +133,30 @@ AudioPulse::AudioPulse(LedStrip& strip)
 
 
 
+	// NEED Tuning
 
+		// TODO this could prob go quicker
+	pulse = new ColrGradPulse(
+		PhasePulse(.1, .8),
+		ColrGrad(Colr::Blue, Colr::Red));
+	colrs.push_back(pulse);
+	/*
 
-
-
-
-
-// TODO this could prob go slower
-	colrs.push_back(new ColrRainbowPulseDual(PhasePulse(.1, .8)));
-
-	colrs.push_back(new ColrPair(Colr::Blue, Colr::Red));
-	colrs.push_back(new ColrPair(Colr::Purple, Colr::Green));
-	colrs.push_back(new ColrRainbow());
-	colrs.push_back(new ColrRainbowPulse(PhasePulse(.1, .8)));
-
-	// TODO this could prob go quicker
 	colrs.push_back(new ColrGradPulse(
 		PhasePulse(.1, .8),
 		ColrGrad(Colr::Blue, Colr::Red)));
 
 
-	colrs.push_back(new ColrPair(Colr::Blue, Colr::Green));
+
+	// GOOD
+	colrs.push_back(new ColrRainbowPulseDual(PhasePulse(0, .1)));
+	colrs.push_back(new ColrRainbowPulse(PhasePulse(0, .184)));
+
+	colrs.push_back(new ColrRainbow());
+	colrs.push_back(new ColrPair(Colr::Blue, Colr::Red));
+	colrs.push_back(new ColrPair(Colr::Purple, Colr::Green));
+	colrs.push_back(new ColrPair(Colr::Blue, Colr::Green));*/
+	// TODO: 12 hue pairs from rings
 	// Blue orange
 	// 1/12 hue is nice orange
 

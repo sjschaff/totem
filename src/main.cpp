@@ -12,7 +12,7 @@ void initRand()
 //Main main;
 void setup() {
 	delay(100);
-	//initRand();
+	initRand();
 	Totem* totem = new Totem();
 	delay(100);
 	while (1) {

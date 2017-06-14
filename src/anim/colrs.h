@@ -64,6 +64,7 @@ template<class TPhase, class TColr>
 class ColrPhase : public ColrAnim
 {
 private:
+public:
 	TPhase phase;
 	TColr colr;
 

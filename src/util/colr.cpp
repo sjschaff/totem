@@ -26,7 +26,7 @@ void Colr::operator*=(float v)
 
 Colr Colr::gammaCorrect()
 {
-	return Colr( gamma(r), gamma(g), gamma(b)*.8);
+	return Colr( gamma(r), gamma(g)*.9, gamma(b)*.8);
 }
 
 Colr Colr::Lerp(Colr a, Colr b, float fr)
