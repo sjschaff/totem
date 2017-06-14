@@ -105,6 +105,22 @@ AudioData Audio::ReadAudio(Plot* _plot)
 	if (isLoud)
 		msLastBeat = millis;
 
+	// TODO consider replacing with the simpler
+	/*{
+		if (isLoud)
+		{
+			if (!wasLoud)
+			{
+				isNewBeat
+				wasLoud = true;
+			}
+		}
+		else
+		{
+			wasLoud = false;
+		}
+	}*/
+
 	if (!wasBeat)
 	{
 		if (isLoud)
@@ -132,7 +148,8 @@ AudioData Audio::ReadAudio(Plot* _plot)
 		avg - (smoothed - avg),
 		smoothed,
 		.2, 1); // TODO dafuq??
-	audio.beatFalloff = saturate((millis - msLastBeat) / (4.f*msPerBeat));
+
+	audio.beatFalloff = 1 - saturate((millis - msLastBeat) / (4.f*msPerBeat));
 	return audio;
 }
 

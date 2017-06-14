@@ -72,11 +72,27 @@ class AnimRings : public PhaseAnim<PhaseLinear>
 {
 private:
 	uint iPhase = 0;
-	uint iPhaseTop = 5;
-	bool wasLoud = false;
 
 public:
 	AnimRings(float duration);
+
+	void Display(LedStrip& strip, Frame frame, float phase);
+};
+
+enum StepMode
+{
+	Loop, Step, FadeStep, FlickerStep
+};
+
+class TipAnimLoop : public PhaseAnim<PhaseLinear>
+{
+private:
+	uint iPhase = 0;
+
+	StepMode stepMode;
+
+public:
+	TipAnimLoop(StepMode stepMode, float duration);
 
 	void Display(LedStrip& strip, Frame frame, float phase);
 };
