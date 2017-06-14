@@ -5,7 +5,8 @@ Beat::Beat(ulong msStart) : msStart(msStart) {}
 
 // Main TODO:
 // - auto anim switching + auto color switching
-// 	- buttons to cycle
+// 		- buttons to cycle
+// - leds should just ignore row 3 :( to save on power
 // - Separate Tip Anims
 // 		- needs anim overlay
 // - animation tip transitions
@@ -106,6 +107,11 @@ AudioPulse::AudioPulse(LedStrip& strip)
 		new AnimWithTip<AnimRings TipAnimLoop>(
 			AnimRings(1000),
 			TipAnimLoop(true, 1000))*/
+
+	anims.push_back(
+		new AnimWithTip<AnimNoop, TipPulse>(
+			AnimNoop(true),
+			TipPulse()));
 
 	anims.push_back(
 		new AnimWithTip<AnimNoop, TipAnimLoop>(

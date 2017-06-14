@@ -68,12 +68,10 @@ void TipAnimLoop::Display(LedStrip& strip, Frame frame, float phase)
 	ForEachLed(iLed)
 	{
 		Led led = strip.leds[iLed];
-		Colr colr = Colr::Black;
-
 		if (led.face.iRing > 3)
 		{
 			uint iColr = led.face.iRing == 6 ? 1 : 0;
-			colr = frame.colr->GetColr(iColr, phase, 0);
+			Colr colr = frame.colr->GetColr(iColr, phase, 0);
 
 			if (led.iFace == iFaceOut)
 				colr *= fadePre;
@@ -81,6 +79,36 @@ void TipAnimLoop::Display(LedStrip& strip, Frame frame, float phase)
 				colr *= fadePost;
 			else
 				continue;
+
+			strip.SetColor(iLed, colr);
+		}
+	}
+}
+
+TipPulse::TipPulse()//PhasePulse phase)
+	: PhaseAnim(PhasePulse(.1, 6)) {}
+
+void TipPulse::Display(LedStrip& strip, Frame frame, float phase)
+{
+	ForEachLed(iLed)
+	{
+		Led led = strip.leds[iLed];
+		if (led.face.iRing > 3)
+		{
+			uint iColr = led.face.iRing == 6 ? 1 : 0;
+			Colr colr = frame.colr->GetColr(iColr, phase, 0);
+
+			// TODO: share math from vert pulse
+			float width = .54; // .44 is a good thinner one
+			float min = 1;
+			float max = 3;
+			float height = dmap(
+				//sin(mapfr(phase, -PI/2, PI/2)), -1, 1,
+				phase, 0, 1,
+				min - width, max + width);
+
+			float intens = smoothstepDual((led.face.frRad - height)/width);
+			colr *= intens;
 
 			strip.SetColor(iLed, colr);
 		}

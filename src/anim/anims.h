@@ -97,4 +97,14 @@ public:
 	void Display(LedStrip& strip, Frame frame, float phase);
 };
 
+// TODO share with vert pulse (colrs work differently)
+class TipPulse : public PhaseAnim<PhasePulse>
+{
+private:
+public:
+	TipPulse();//PhasePulse phase);
+
+	void Display(LedStrip& strip, Frame frame, float phase);
+};
+
 #endif
