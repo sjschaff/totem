@@ -2,16 +2,14 @@
 #include "device/audio.h"
 #include "device/input.h"
 #include "device/leds.h"
-#include "mode/audiopulse.h"
+#include "mode/mode.h"
 
 // TODO
 /*
 	-weird pulsing on spinner (see at .5 rps, probably error in polar coords?)
 	-polar delta (for AA) for tip leds
-	-incorporate mseq ic
 	-animation overlay system (sep. color from animation)
 	-figure out coil whine amps
-	-better time mod system
 */
 
 class Totem : public BtnHandler
@@ -24,22 +22,36 @@ public:
 	LedStrip strip;
 	Audio audio;
 
+	// Modes
+	AudioPulse audioPulse;
+	Chillax chillax;
+
 	// State
 	elapsedMillis millis;
 	Mode* mode;
 
-	void OnPressA() {OnPress('A'); mode->OnPressA();}
-	void OnPressB() {OnPress('B'); mode->OnPressB();}
-	void OnPressC() {OnPress('C'); mode->OnPressC();}
-	void OnPressD() {OnPress('D'); mode->OnPressD();}
-	void OnPressE() {OnPress('E'); mode->OnPressE();}
-	void OnPressF() {OnPress('F'); mode->OnPressF();}
+	void OnPressA() {
+		OnPress('A');
+
+		if (mode == &chillax)
+			mode = &audioPulse;
+		else
+			mode = &chillax;
+	}
+
+	void OnPressB() { OnPress('B'); mode->OnPressB(); }
+	void OnPressC() { OnPress('C'); mode->OnPressC(); }
+	void OnPressD() { OnPress('D'); mode->OnPressD(); }
+	void OnPressE() { OnPress('E'); mode->OnPressE(); }
+	void OnPressF() { OnPress('F'); mode->OnPressF(); }
 
 	Totem() :
 		log(true), plot(false),
-		input(this), audio(input)
+		input(this), audio(input),
+		audioPulse(strip), chillax(strip)
 	{
-		mode = new AudioPulse(strip, input);
+		//mode = &chillax;
+		mode = &audioPulse;
 	}
 
 	void OnPress(char c)
@@ -61,9 +73,6 @@ public:
 		frame.knobA = input.ReadA();
 		frame.knobB = input.ReadB();
 		frame.knobC = input.ReadC();
-
-		// TODO: move to modes?
-		strip.SetBrightness(mapfr(frame.knobA, .2, .85)); // TODO make anims more sparing with simultaneous lit leds
 
 		mode->Update(frame);
 	}

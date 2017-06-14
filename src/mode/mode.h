@@ -1,6 +1,8 @@
 #ifndef mode_h
 #define mode_h
 
+#include <list>
+#include <vector>
 #include "anim/anim.h"
 #include "device/input.h"
 
@@ -8,18 +10,52 @@ class Mode : BtnHandler
 {
 protected:
 	LedStrip& strip;
-	Input& input;
+	Mode(LedStrip& strip);
 
 public:
-	Mode(LedStrip& strip, Input& input);
 	virtual void Update(Frame frame) = 0;
 
-	virtual void OnPressA();
+	void OnPressA();
+	
 	virtual void OnPressB();
 	virtual void OnPressC();
 	virtual void OnPressD();
 	virtual void OnPressE();
 	virtual void OnPressF();
+};
+
+
+struct Beat
+{
+	ulong msStart;
+
+	Beat(ulong msStart);
+};
+
+class LightshowMode : public Mode
+{
+protected:
+	std::list<Beat> beats;
+	std::vector<Anim*> anims;
+	uint iAnim;
+
+	LightshowMode(LedStrip& strip);
+
+public:
+	void Update(Frame frame);
+	void OnPressE();
+};
+
+class AudioPulse : public LightshowMode
+{
+public:
+	AudioPulse(LedStrip& strip);
+};
+
+class Chillax : public LightshowMode
+{
+public:
+	Chillax(LedStrip& strip);
 };
 
 #endif

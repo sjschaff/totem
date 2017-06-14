@@ -1,4 +1,4 @@
-#include "audiopulse.h"
+#include "mode.h"
 #include "anim/anims.h"
 
 Beat::Beat(ulong msStart) : msStart(msStart) {}
@@ -78,11 +78,8 @@ public:
 	}
 };
 
-
-// vertical pulse (rings moving up)
 // rnd face pulse (color+compl on inner outer rings)
 // TODO Shimmer type effect -> random leds on/off
-// TODO revive breathe, add to Chill Mode
 
 // buttons:
 // next mode
@@ -97,35 +94,15 @@ public:
 // brightness
 // color
 
-AudioPulse::AudioPulse(LedStrip& strip, Input& input)
-	: Mode(strip, input)
+AudioPulse::AudioPulse(LedStrip& strip)
+	: LightshowMode(strip)
 {
-	anims.push_back(new AnimBreathe(.2, 2000));
-
 	// was .1, 4.5.  good but flickery
 	anims.push_back(new AnimVertPulse(.126, PhasePulse(.15, 3.5)));
 
-	anims.push_back(new AnimLighthouse(4000*4));
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.125, .5)));
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.25, 2))); // TODO Slow speed for this is perfect for chill mode (account for 4x tho)
 	anims.push_back(new AnimRings(1000));
 	anims.push_back(new AnimSpin());
 	anims.push_back(new AnimFlash());
-
-	iAnim = 0;
-}
-
-void AudioPulse::Update(Frame frame)
-{
-	if (frame.audio.isBeginBeat)
-		beats.push_back(Beat(frame.ms));
-
-	Anim* anim = anims[iAnim];
-	anim->Update(strip, frame);
-	strip.Show();
-}
-
-void AudioPulse::OnPressE()
-{
-	iAnim = (iAnim + 1) % anims.size();
 }

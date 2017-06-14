@@ -9,7 +9,7 @@ void AnimVertPulseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phas
 	//float maxY = 233; => 1
 
 	// .116 seems to be good min for smoothness
-	float width = mapfr(frame.knobC, .1, 2);//200;
+	//float width = mapfr(frame.knobC, .1, 2);//200;
 
 	if (phase <= frPulse)
 	{
