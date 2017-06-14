@@ -21,6 +21,9 @@ void LedStrip::SetBrightness(float fr)
 
 void LedStrip::SetColorRaw(ushort px, Colr colr)
 {
+	//if (leds[px].face.iRing == 3)
+	//	return;
+
 	strip.setPixelColor(px, (ubyte)(colr.r*255), (ubyte)(colr.g*255), (ubyte)(colr.b*255));
 }
 

@@ -24,27 +24,23 @@ public:
 	virtual void OnPressF();
 };
 
-
-struct Beat
-{
-	ulong msStart;
-
-	Beat(ulong msStart);
-};
-
 class LightshowMode : public Mode
 {
 protected:
-	std::list<Beat> beats;
 	std::vector<Anim*> anims;
+	std::vector<Anim*> tipAnims;
 	std::vector<ColrAnim*> colrs;
+
+	bool fManualMode = true;
 	uint iAnim;
+	uint iAnimTip;
 	uint iColr;
 
 	LightshowMode(LedStrip& strip);
 
 public:
 	void Update(Frame frame);
+	void OnPressC();
 	void OnPressE();
 	void OnPressF();
 };

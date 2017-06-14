@@ -16,6 +16,9 @@ void AnimRings::Display(LedStrip& strip, Frame frame, float phase)
 		if (led.face.iRing == (iPhase % 3))
 			colr = frame.colr->GetColr(iPhase % 2, phase, 0) * frame.audio.energy;
 
+		if (led.face.iRing == 2)
+			colr *= .8;
+
 		strip.SetColor(iLed, colr);
 	}
 }

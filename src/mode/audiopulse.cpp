@@ -1,8 +1,6 @@
 #include "mode.h"
 #include "anim/anims.h"
 
-Beat::Beat(ulong msStart) : msStart(msStart) {}
-
 // Main TODO:
 // - auto anim switching + auto color switching
 // 		- buttons to cycle
@@ -92,61 +90,62 @@ public:
 	}
 };
 
+class AnimWithTip2 : public Anim
+{
+private:
+	Anim* animBody;
+	Anim* animTip;
+
+public:
+	AnimWithTip2(Anim* animBody, Anim* animTip) : animBody(animBody), animTip(animTip) {}
+
+	void Update(LedStrip& strip, Frame frame)
+	{
+		animBody->Update(strip, frame);
+		animTip->Update(strip, frame);
+	}
+};
+
 AudioPulse::AudioPulse(LedStrip& strip)
 	: LightshowMode(strip)
 {
-	/*anims.push_back(new AnimSpin());
-	anims.push_back(new AnimFlash()); // TODO: worth it?
+	// WIP
 
 	// TODO needs tuning
 	// (pre phasex2) was .1, 4.5.  good but flickery
-	anims.push_back(new AnimVertPulse(.126, PhasePulse(.3, 7)));
+	/*anims.push_back(new AnimVertPulse(.126, PhasePulse(.3, 7)));
 
 	// TODO needs tuning
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.125, .5)));
 	anims.push_back(new AnimLighthousePulse(PhasePulse(.25, 2))); // TODO Slow speed for this is perfect for chill mode (account for 4x tho)
 */
 
-		/*anims.push_back(
-			new AnimWithTip<AnimRings TipAnimLoop>(
-				AnimRings(1000),
-				TipAnimLoop(true, 1000))*/
 
-		// TODO needs tuning
-		/*anims.push_back(
-			new AnimWithTip<AnimNoop, TipPulse>(
-				AnimNoop(true),
-				TipPulse()));*/
 
-		anims.push_back(
-			new AnimWithTip<AnimNoop, TipFlash>(
-				AnimNoop(true),
-				TipFlash(FlashMode::Toggle)));
-		anims.push_back(
-			new AnimWithTip<AnimNoop, TipFlash>(
-				AnimNoop(true),
-				TipFlash(FlashMode::Fade)));
-		anims.push_back(
-			new AnimWithTip<AnimNoop, TipFlash>(
-				AnimNoop(true),
-				TipFlash(FlashMode::Flicker)));
 
-		/*anims.push_back(
-			new AnimWithTip<AnimNoop, TipAnimLoop>(
-				AnimNoop(true),
-				TipAnimLoop(StepMode::Loop, 2000)));
-		anims.push_back(
-			new AnimWithTip<AnimNoop, TipAnimLoop>(
-				AnimNoop(true),
-				TipAnimLoop(StepMode::Step, 2000)));
-		anims.push_back(
-			new AnimWithTip<AnimNoop, TipAnimLoop>(
-				AnimNoop(true),
-				TipAnimLoop(StepMode::FadeStep, 2000)));
-		anims.push_back(
-			new AnimWithTip<AnimNoop, TipAnimLoop>(
-				AnimNoop(true),
-				TipAnimLoop(StepMode::FlickerStep, 2000)));*/
+	// THESE ARE DOPE
+	anims.push_back(new AnimSpin());
+	anims.push_back(new AnimFlash());
+	anims.push_back(new AnimRings(1000));
+
+	tipAnims.push_back(new TipPulse());
+	tipAnims.push_back(new TipFlash(FlashMode::Toggle));
+	tipAnims.push_back(new TipFlash(FlashMode::Fade));
+	tipAnims.push_back(new TipFlash(FlashMode::Flicker));
+	tipAnims.push_back(new TipAnimLoop(StepMode::Loop, 2000));
+	tipAnims.push_back(new TipAnimLoop(StepMode::Step, 2000));
+	tipAnims.push_back(new TipAnimLoop(StepMode::FadeStep, 2000));
+	tipAnims.push_back(new TipAnimLoop(StepMode::FlickerStep, 2000));
+
+
+
+
+
+
+
+
+
+
 
 	colrs.push_back(new ColrPair(Colr::Blue, Colr::Red));
 	colrs.push_back(new ColrPair(Colr::Purple, Colr::Green));

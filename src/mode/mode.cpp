@@ -18,19 +18,24 @@ void LightshowMode::Update(Frame frame)
 	// TODO make anims more sparing with simultaneous lit leds
 	strip.SetBrightness(mapfr(frame.knobA, .2, .85));
 
-	if (frame.audio.isBeginBeat)
-		beats.push_back(Beat(frame.ms));
-
 	frame.colr = colrs[iColr];
 	frame.colr->Update(frame);
 	Anim* anim = anims[iAnim];
 	anim->Update(strip, frame);
+
+	Anim* tipAnim = tipAnims[iAnimTip];
+	tipAnim->Update(strip, frame);
 	strip.Show();
 }
 
 void LightshowMode::OnPressE()
 {
 	iAnim = (iAnim + 1) % anims.size();
+}
+
+void LightshowMode::OnPressC()
+{
+	iAnimTip = (iAnimTip + 1) % tipAnims.size();
 }
 
 void LightshowMode::OnPressF()
