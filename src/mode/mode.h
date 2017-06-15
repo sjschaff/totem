@@ -71,6 +71,7 @@ public:
 	Chillax(LedStrip& strip);
 
 	void OnPressC();
+	void OnPressD();
 };
 
 #endif
