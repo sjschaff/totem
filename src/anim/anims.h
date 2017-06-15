@@ -98,12 +98,13 @@ enum StepMode
 class TipAnimLoop : public PhaseAnim<PhaseLinear>
 {
 private:
+	const StepMode stepMode;
+	const bool dir;
+
 	uint iPhase = 0;
 
-	StepMode stepMode;
-
 public:
-	TipAnimLoop(StepMode stepMode, float duration);
+	TipAnimLoop(StepMode stepMode, bool dir);
 
 	void Display(LedStrip& strip, Frame frame, float phase);
 };

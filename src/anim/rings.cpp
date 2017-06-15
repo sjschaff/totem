@@ -23,8 +23,8 @@ void AnimRings::Display(LedStrip& strip, Frame frame, float phase)
 	}
 }
 
-TipAnimLoop::TipAnimLoop(StepMode stepMode, float duration)
-	: PhaseAnim(PhaseLinear(duration)), stepMode(stepMode) {}
+TipAnimLoop::TipAnimLoop(StepMode stepMode, bool dir)
+	: PhaseAnim(PhaseLinear(2000)), stepMode(stepMode), dir(dir) {}
 
 void TipAnimLoop::Display(LedStrip& strip, Frame frame, float phase)
 {
@@ -33,6 +33,7 @@ void TipAnimLoop::Display(LedStrip& strip, Frame frame, float phase)
 
 	// Spinner
 	uint iFace = iPhase;
+
 	float fadePre = 0;
 	float fadePost;
 
@@ -65,8 +66,14 @@ void TipAnimLoop::Display(LedStrip& strip, Frame frame, float phase)
 		}
 	}
 
+	if (dir)
+		iFace = 4 - iFace;
+
 	uint iFaceOut = iFace;
 	uint iFaceIn = (iFace + 1) % 5;
+	
+	if (dir)
+		iFaceIn = (iFace + 5 - 1) % 5;
 
 	ForEachLed(iLed)
 	{

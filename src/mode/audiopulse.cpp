@@ -132,13 +132,21 @@ AudioPulse::AudioPulse(LedStrip& strip)
 
 	tipAnims.push_back(new AnimNoop(false));
 	tipAnims.push_back(new TipPulse());
+	tipAnims.push_back(new TipPulse());
+	tipAnims.push_back(new TipFlash(FlashMode::Toggle));
 	tipAnims.push_back(new TipFlash(FlashMode::Toggle));
 	tipAnims.push_back(new TipFlash(FlashMode::Fade));
+	tipAnims.push_back(new TipFlash(FlashMode::Fade));
 	tipAnims.push_back(new TipFlash(FlashMode::Flicker));
-	tipAnims.push_back(new TipAnimLoop(StepMode::Loop, 2000));
-	tipAnims.push_back(new TipAnimLoop(StepMode::Step, 2000));
-	tipAnims.push_back(new TipAnimLoop(StepMode::FadeStep, 2000));
-	tipAnims.push_back(new TipAnimLoop(StepMode::FlickerStep, 2000));
+	tipAnims.push_back(new TipFlash(FlashMode::Flicker));
+	tipAnims.push_back(new TipAnimLoop(StepMode::Loop, false));
+	tipAnims.push_back(new TipAnimLoop(StepMode::Loop, true));
+	tipAnims.push_back(new TipAnimLoop(StepMode::Step, false));
+	tipAnims.push_back(new TipAnimLoop(StepMode::Step, true));
+	tipAnims.push_back(new TipAnimLoop(StepMode::FadeStep, false));
+	tipAnims.push_back(new TipAnimLoop(StepMode::FadeStep, true));
+	tipAnims.push_back(new TipAnimLoop(StepMode::FlickerStep, false));
+	tipAnims.push_back(new TipAnimLoop(StepMode::FlickerStep, true));
 
 
 	colrs.push_back(new ColrRainbow());
