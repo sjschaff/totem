@@ -31,26 +31,38 @@ protected:
 	std::vector<Anim*> tipAnims;
 	std::vector<ColrAnim*> colrs;
 
-	bool fManualMode = true;
-	uint iAnim;
-	uint iAnimTip;
-	uint iColr;
+	uint iAnim = 0;
+	uint iAnimTip = 0;
+	uint iColr = 0;
 
 	LightshowMode(LedStrip& strip);
+	void NextRandom();
+	void NextAnim();
+	void NextTip();
+	void NextColr();
 
 public:
 	void Update(Frame frame);
-	void OnPressC();
-	void OnPressD();
-	void OnPressE();
-	void OnPressF();
 };
 
 class AudioPulse : public LightshowMode
 {
+private:
+	bool fLockAnim = false;
+	ulong msAnimCur = 0;
+	ulong msAnimTarget = 0;
+
+	void StartRandomTimer();
+
 public:
 	AudioPulse(LedStrip& strip);
 	void Update(Frame frame);
+
+	void OnPressB();
+	void OnPressC();
+	void OnPressD();
+	void OnPressE();
+	void OnPressF();
 };
 
 class Chillax : public LightshowMode

@@ -70,45 +70,48 @@ public:
 	}
 };
 
-template<class TAnim, class TTip>
-class AnimWithTip : public Anim
-{
-private:
-	TAnim animBody;
-	TTip animTip;
-
-public:
-	AnimWithTip(TAnim animBody, TTip animTip) : animBody(animBody), animTip(animTip) {}
-
-	void Update(LedStrip& strip, Frame frame)
-	{
-		animBody.Update(strip, frame);
-		animTip.Update(strip, frame);
-	}
-};
-
-class AnimWithTip2 : public Anim
-{
-private:
-	Anim* animBody;
-	Anim* animTip;
-
-public:
-	AnimWithTip2(Anim* animBody, Anim* animTip) : animBody(animBody), animTip(animTip) {}
-
-	void Update(LedStrip& strip, Frame frame)
-	{
-		animBody->Update(strip, frame);
-		animTip->Update(strip, frame);
-	}
-};
-
 void AudioPulse::Update(Frame frame)
 {
 	//pulse->phase.phase.sfOffBeat = mapfr(frame.knobB, 0, .4); // .1
 	//pulse->phase.phase.sfBeat = mapfr(frame.knobC, 0, 2); // .8
+	if (!fLockAnim)
+		msAnimCur += frame.ms;
+
+	if (frame.audio.isBeginBeat && msAnimCur >= msAnimTarget)
+	{
+		NextRandom();
+		StartRandomTimer();
+	}
+
 	LightshowMode::Update(frame);
 }
+
+void AudioPulse::StartRandomTimer()
+{
+	msAnimCur = 0;
+	msAnimTarget = random(10000, 35000);
+
+	*Log::log << "new anim: ["
+		<< iAnim << ", " << iAnimTip << ", " << iColr << "] - "
+		<< msAnimTarget << "\n";
+}
+
+void AudioPulse::OnPressB()
+{
+	fLockAnim = !fLockAnim;
+	if (!fLockAnim)
+		StartRandomTimer();
+}
+
+void AudioPulse::OnPressC() {
+	NextRandom();
+	StartRandomTimer();
+}
+
+void AudioPulse::OnPressD() { NextAnim(); }
+void AudioPulse::OnPressE() { NextTip(); }
+void AudioPulse::OnPressF() { NextColr(); }
+
 
 #define AddColorPair(A, B) \
 	colrs.push_back(new ColrPair(A, B)); \
@@ -166,4 +169,7 @@ AudioPulse::AudioPulse(LedStrip& strip)
 		if (i < cColr / 2)
 			colrs.push_back(new ColrGradPulse(ColrGrad(hue)));
 	}
+
+	NextRandom();
+	StartRandomTimer();
 }

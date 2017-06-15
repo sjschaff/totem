@@ -15,8 +15,7 @@ LightshowMode::LightshowMode(LedStrip& strip)
 
 void LightshowMode::Update(Frame frame)
 {
-	// TODO make anims more sparing with simultaneous lit leds
-	strip.SetBrightness(mapfr(frame.knobA, .2, .85));
+	strip.SetBrightness(mapfr(frame.knobA, .2, .9));
 
 	frame.colr = colrs[iColr];
 	frame.colr->Update(frame);
@@ -28,24 +27,24 @@ void LightshowMode::Update(Frame frame)
 	strip.Show();
 }
 
-void LightshowMode::OnPressD()
+void LightshowMode::NextRandom()
 {
 	iAnim = random(anims.size());
 	iAnimTip = random(tipAnims.size());
 	iColr = random(colrs.size());
 }
 
-void LightshowMode::OnPressE()
+void LightshowMode::NextAnim()
 {
 	iAnim = (iAnim + 1) % anims.size();
 }
 
-void LightshowMode::OnPressC()
+void LightshowMode::NextTip()
 {
 	iAnimTip = (iAnimTip + 1) % tipAnims.size();
 }
 
-void LightshowMode::OnPressF()
+void LightshowMode::NextColr()
 {
 	iColr = (iColr + 1) % colrs.size();
 }
