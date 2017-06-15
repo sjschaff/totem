@@ -2,7 +2,6 @@
 #include "anim/anims.h"
 
 // Main TODO:
-// - add blue orange
 // - mirror versions of all spinning type animations
 // - auto anim switching + auto color switching
 // 		- buttons to cycle
@@ -120,11 +119,16 @@ AudioPulse::AudioPulse(LedStrip& strip)
 	: LightshowMode(strip)
 {
 	// THESE ARE DOPE
-	anims.push_back(new AnimSpin());
+	anims.push_back(new AnimSpin(false));
+	anims.push_back(new AnimSpin(true));
+	anims.push_back(new AnimLighthousePulse(true));
+	anims.push_back(new AnimLighthousePulse(false));
+
 	anims.push_back(new AnimFlash());
 	anims.push_back(new AnimRings(1000));
-	anims.push_back(new AnimVertPulse(.126, PhasePulse(.1, 2.7)));
-	anims.push_back(new AnimLighthousePulse(.1325, PhasePulse(.064, .424)));
+	anims.push_back(new AnimRings(1000));
+	anims.push_back(new AnimVertPulse());
+	anims.push_back(new AnimVertPulse());
 
 	tipAnims.push_back(new AnimNoop(false));
 	tipAnims.push_back(new TipPulse());

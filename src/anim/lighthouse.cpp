@@ -5,6 +5,8 @@ void LighthouseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phase)
 {
 	float phaseColor = phase;
 	phase = frac(phase*4);
+	if (dir)
+		phase = 1 - phase;
 	ForEachLed(iLed)
 	{
 		Led led = strip.leds[iLed];
@@ -37,8 +39,8 @@ void LighthouseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phase)
 	}
 }
 
-AnimLighthouse::AnimLighthouse(float width, float duration)
-	: LighthouseBase(width, PhaseLinear(duration)) {}
+AnimLighthouse::AnimLighthouse(bool dir, float width, float duration)
+	: LighthouseBase(dir, width, PhaseLinear(duration)) {}
 
-AnimLighthousePulse::AnimLighthousePulse(float width, PhasePulse phase)
-	: LighthouseBase(width, phase) {}
+AnimLighthousePulse::AnimLighthousePulse(bool dir)
+	: LighthouseBase(dir, .1325, PhasePulse(.064, .424)) {}

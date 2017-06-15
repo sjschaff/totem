@@ -5,7 +5,10 @@ void initRand()
 	long a = analogRead(A13); // disconnected pin
 	delay(24);
 	long b = analogRead(A13);
-	randomSeed(a*b);
+	long seed = a*b;
+	if (seed == 0)
+		seed = 1;
+	randomSeed(seed);
 }
 
 // Cause fuck that globals shit

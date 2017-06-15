@@ -41,6 +41,7 @@ protected:
 public:
 	void Update(Frame frame);
 	void OnPressC();
+	void OnPressD();
 	void OnPressE();
 	void OnPressF();
 };

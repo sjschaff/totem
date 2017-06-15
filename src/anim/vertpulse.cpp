@@ -43,5 +43,5 @@ void AnimVertPulseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phas
 AnimBreathe::AnimBreathe(float width, float duration)
 	: AnimVertPulseBase<PhaseLinear>(width, PhaseLinear(duration)) {}
 
-AnimVertPulse::AnimVertPulse(float width, PhasePulse phase)
-	: AnimVertPulseBase<PhasePulse>(width, phase) {}
+AnimVertPulse::AnimVertPulse()
+	: AnimVertPulseBase<PhasePulse>(.126, PhasePulse(.1, 2.7)) {}

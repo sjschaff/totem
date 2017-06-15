@@ -28,6 +28,13 @@ void LightshowMode::Update(Frame frame)
 	strip.Show();
 }
 
+void LightshowMode::OnPressD()
+{
+	iAnim = random(anims.size());
+	iAnimTip = random(tipAnims.size());
+	iColr = random(colrs.size());
+}
+
 void LightshowMode::OnPressE()
 {
 	iAnim = (iAnim + 1) % anims.size();

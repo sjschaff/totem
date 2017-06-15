@@ -1,9 +1,14 @@
 #include "anims.h"
 
-AnimSpin::AnimSpin() : PhaseAnim(PhasePulse(.5, 4)) {}
+AnimSpin::AnimSpin(bool dir)
+	: PhaseAnim(PhasePulse(.5, 4)), dir(dir) {}
 
 void AnimSpin::Display(LedStrip& strip, Frame frame, float phase)
 {
+	float phaseSpin = phase;
+	if (dir)
+		phaseSpin = 1 - phaseSpin;
+
 	ForEachLed(iLed)
 	{
 		Led led = strip.leds[iLed];
@@ -29,7 +34,7 @@ void AnimSpin::Display(LedStrip& strip, Frame frame, float phase)
 		Colr colr = frame.colr->GetColr(iColr, phase, 0);
 
 		float width = sf*delta;
-		float dist = modDelta(phase, polar) / width;
+		float dist = modDelta(phaseSpin, polar) / width;
 		float intens = smoothstepDual(dist);
 		strip.SetColor(iLed, colr*intens);//*audio);
 		continue;

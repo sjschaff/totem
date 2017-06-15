@@ -6,8 +6,11 @@
 // Prefers dual color
 class AnimSpin : public PhaseAnim<PhasePulse>
 {
+private:
+	const bool dir;
+
 public:
-	AnimSpin();
+	AnimSpin(bool dir);
 	void Display(LedStrip& strip, Frame frame, float phase);
 };
 
@@ -26,12 +29,13 @@ template<class TPhase>
 class LighthouseBase : public PhaseAnim<TPhase>
 {
 private:
-	public:
+public:
+	const bool dir;
 	float width;
 
 protected:
-	LighthouseBase(float width, TPhase phase)
-		: PhaseAnim<TPhase>(phase), width(width) {}
+	LighthouseBase(bool dir, float width, TPhase phase)
+		: PhaseAnim<TPhase>(phase), dir(dir), width(width) {}
 
 public:
 	void Display(LedStrip& strip, Frame frame, float phase);
@@ -40,13 +44,13 @@ public:
 class AnimLighthouse : public LighthouseBase<PhaseLinear>
 {
 public:
-	AnimLighthouse(float width, float duration);
+	AnimLighthouse(bool dir, float width, float duration);
 };
 
 class AnimLighthousePulse : public LighthouseBase<PhasePulse>
 {
 public:
-	AnimLighthousePulse(float width, PhasePulse phase);
+	AnimLighthousePulse(bool dir);
 };
 
 template<class TPhase>
@@ -70,7 +74,7 @@ public:
 class AnimVertPulse : public AnimVertPulseBase<PhasePulse>
 {
 public:
-	AnimVertPulse(float width, PhasePulse phase);
+	AnimVertPulse();
 };
 
 class AnimRings : public PhaseAnim<PhaseLinear>
