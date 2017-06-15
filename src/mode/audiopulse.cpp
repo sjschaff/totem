@@ -2,11 +2,6 @@
 #include "anim/anims.h"
 
 // Main TODO:
-// - color modes chill:
-//		- auto rainbow
-//		- auto rainbow dual
-//		- fixed (rainbow knob)
-//		- fixed (rainbow dual knob)
 // - fix battery pack
 
 

@@ -2,6 +2,19 @@
 #include "anim/anims.h"
 
 
+struct PhaseKnob : public Phase
+{
+public:
+	PhaseKnob() : Phase(1000) {}
+
+	void Accumulate(Frame frame)
+	{
+		phase = frame.knobB;
+	}
+
+	float Delta(Frame frame) { return 0; }
+};
+
 class ColrRainbowAlways : public ColrAnim
 {
 public:
@@ -13,12 +26,26 @@ public:
 	void Update(Frame frame) {}
 };
 
+template<class TPhase, class TColr>
+class ColrChill : public ColrPhase<TPhase, TColr>
+{
+protected:
+	ColrChill(TPhase phase)
+		: ColrPhase<TPhase, TColr>(phase, TColr()) {}
+
+	Colr GetColr(int iColr, float frColr, float frColrAnim) {
+		return ColrPhase<TPhase, TColr>::colr.GetColr(
+			iColr,
+			ColrPhase<TPhase, TColr>::phase.Value());
+	}
+};
+
 template<class TColr>
-class ColrRainbowChill : public ColrPhase<PhaseLinear, TColr>
+class ColrRainbowChill : public ColrChill<PhaseLinear, TColr>
 {
 public:
 	ColrRainbowChill()
-		: ColrPhase<PhaseLinear, TColr>(PhaseLinear(1000), TColr()) {}
+		: ColrChill<PhaseLinear, TColr>(PhaseLinear(16000)) {}
 
 	void Update(Frame frame)
 	{
@@ -26,12 +53,14 @@ public:
 		ColrPhase<PhaseLinear, TColr>::phase.invDuration = 1.f / duration;
 		ColrPhase<PhaseLinear, TColr>::Update(frame);
 	}
+};
 
-	Colr GetColr(int iColr, float frColr, float frColrAnim) {
-		return ColrPhase<PhaseLinear, TColr>::colr.GetColr(
-			iColr,
-			ColrPhase<PhaseLinear, TColr>::phase.Value());
-	}
+template<class TColr>
+class ColrRainbowKnob : public ColrChill<PhaseKnob, TColr>
+{
+public:
+	ColrRainbowKnob()
+		: ColrChill<PhaseKnob, TColr>(PhaseKnob()) {}
 };
 
 Chillax::Chillax(LedStrip& strip)
@@ -47,10 +76,8 @@ Chillax::Chillax(LedStrip& strip)
 	colrs.push_back(new ColrRainbowAlways());
 	colrs.push_back(new ColrRainbowChill<ColrRainbow>());
 	colrs.push_back(new ColrRainbowChill<ColrRainbowDual>());
-
-	// - color modes chill:
-	//		- fixed (rainbow knob)
-	//		- fixed (rainbow dual knob)
+	colrs.push_back(new ColrRainbowKnob<ColrRainbow>());
+	colrs.push_back(new ColrRainbowKnob<ColrRainbowDual>());
 }
 
 void Chillax::OnPressC()

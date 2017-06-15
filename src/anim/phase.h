@@ -18,7 +18,7 @@ protected:
 
 public:
 	Phase(float dur);
-	void Accumulate(Frame frame);
+	virtual void Accumulate(Frame frame);
 	virtual float Value();
 };
 
