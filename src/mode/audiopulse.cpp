@@ -2,6 +2,7 @@
 #include "anim/anims.h"
 
 // Main TODO:
+// - add blue orange
 // - mirror versions of all spinning type animations
 // - auto anim switching + auto color switching
 // 		- buttons to cycle
@@ -103,13 +104,17 @@ public:
 	}
 };
 
-ColrGradPulse* pulse;
 void AudioPulse::Update(Frame frame)
 {
-	//pulse->phase.sfOffBeat = mapfr(frame.knobB, 0, .4); // .1
-	//pulse->phase.sfBeat = mapfr(frame.knobC, 0, .4); // .8
+	//pulse->phase.phase.sfOffBeat = mapfr(frame.knobB, 0, .4); // .1
+	//pulse->phase.phase.sfBeat = mapfr(frame.knobC, 0, 2); // .8
 	LightshowMode::Update(frame);
 }
+
+#define AddColorPair(A, B) \
+	colrs.push_back(new ColrPair(A, B)); \
+	colrs.push_back(new ColrPair(B, A)); \
+	colrs.push_back(new ColrGradPulse(ColrGrad(A, B)));
 
 AudioPulse::AudioPulse(LedStrip& strip)
 	: LightshowMode(strip)
@@ -132,32 +137,21 @@ AudioPulse::AudioPulse(LedStrip& strip)
 	tipAnims.push_back(new TipAnimLoop(StepMode::FlickerStep, 2000));
 
 
-
-	// NEED Tuning
-
-		// TODO this could prob go quicker
-	pulse = new ColrGradPulse(
-		PhasePulse(.1, .8),
-		ColrGrad(Colr::Blue, Colr::Red));
-	colrs.push_back(pulse);
-	/*
-
-	colrs.push_back(new ColrGradPulse(
-		PhasePulse(.1, .8),
-		ColrGrad(Colr::Blue, Colr::Red)));
-
-
-
-	// GOOD
+	colrs.push_back(new ColrRainbow());
 	colrs.push_back(new ColrRainbowPulseDual(PhasePulse(0, .1)));
 	colrs.push_back(new ColrRainbowPulse(PhasePulse(0, .184)));
 
-	colrs.push_back(new ColrRainbow());
-	colrs.push_back(new ColrPair(Colr::Blue, Colr::Red));
-	colrs.push_back(new ColrPair(Colr::Purple, Colr::Green));
-	colrs.push_back(new ColrPair(Colr::Blue, Colr::Green));*/
-	// TODO: 12 hue pairs from rings
-	// Blue orange
-	// 1/12 hue is nice orange
+	AddColorPair(Colr::Blue, Colr::Red);
+	AddColorPair(Colr::Blue, Colr::Green);
+	AddColorPair(Colr(0, 0, .85), Colr::Hue(1.f/12.f));
 
+	const uint cColr = 6;
+	for (uint i = 0; i < cColr; ++i)
+	{
+		float hue = i / (float)cColr;
+		colrs.push_back(new ColrPair(hue));
+
+		if (i < cColr / 2)
+			colrs.push_back(new ColrGradPulse(ColrGrad(hue)));
+	}
 }

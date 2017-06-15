@@ -103,7 +103,7 @@ public:
 class ColrGradPulse : public ColrPhase<PhaseBounce<PhasePulse>, ColrGrad>
 {
 public:
-	ColrGradPulse(PhasePulse phase, ColrGrad grad);
+	ColrGradPulse(ColrGrad grad);
 };
 
 #endif

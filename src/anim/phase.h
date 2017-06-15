@@ -43,6 +43,7 @@ template<class TPhase>
 struct PhaseBounce : public Phase
 {
 private:
+public:
 	TPhase phase;
 	bool flipped;
 
@@ -52,7 +53,6 @@ protected:
 	}
 
 	void OnWrap() {
-		*Log::log << "wrap\n";
 		flipped = !flipped;
 	}
 
