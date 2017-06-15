@@ -58,8 +58,10 @@ class AnimVertPulseBase : public PhaseAnim<TPhase>
 {
 protected:
 	float width;
-	AnimVertPulseBase(float width, TPhase phase)
-		: PhaseAnim<TPhase>(phase), width(width) {}
+	bool bounce;
+
+	AnimVertPulseBase(bool bounce, float width, TPhase phase)
+		: PhaseAnim<TPhase>(phase), width(width), bounce(bounce) {}
 
 public:
 	void Display(LedStrip& strip, Frame frame, float phase);
@@ -68,7 +70,8 @@ public:
 class AnimBreathe : public AnimVertPulseBase<PhaseLinear>
 {
 public:
-	AnimBreathe(float width, float duration);
+	AnimBreathe(bool bounce);
+	void Update(LedStrip& strip, Frame frame);
 };
 
 class AnimVertPulse : public AnimVertPulseBase<PhasePulse>

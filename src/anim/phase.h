@@ -6,6 +6,7 @@
 struct Phase
 {
 private:
+public:
 	float phase;
 	float invDuration;
 

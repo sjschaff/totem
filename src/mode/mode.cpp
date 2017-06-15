@@ -1,7 +1,9 @@
 #include "mode.h"
 
 Mode::Mode(LedStrip& strip)
-	: strip(strip) {}
+	: strip(strip) {
+
+}
 
 void Mode::OnPressA() {}
 void Mode::OnPressB() {}

@@ -52,24 +52,6 @@
 // brightness
 // color
 
-class AnimNoop : public Anim
-{
-private:
-	const bool fClear;
-
-public:
-	AnimNoop(bool fClear) : fClear(fClear) {}
-
-	void Update(LedStrip& strip, Frame frame)
-	{
-		if (fClear)
-		{
-			ForEachLed(iLed)
-				strip.SetColor(iLed, Colr::Black);
-		}
-	}
-};
-
 void AudioPulse::Update(Frame frame)
 {
 	//pulse->phase.phase.sfOffBeat = mapfr(frame.knobB, 0, .4); // .1

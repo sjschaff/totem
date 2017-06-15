@@ -69,6 +69,8 @@ class Chillax : public LightshowMode
 {
 public:
 	Chillax(LedStrip& strip);
+
+	void OnPressC();
 };
 
 #endif

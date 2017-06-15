@@ -13,6 +13,17 @@ public:
 	virtual void Update(LedStrip& strip, Frame frame) = 0;
 };
 
+class AnimNoop : public Anim
+{
+private:
+	const bool fClear;
+
+public:
+	AnimNoop(bool fClear);
+
+	void Update(LedStrip& strip, Frame frame);
+};
+
 template<class TPhase>
 class PhaseAnim : public Anim
 {

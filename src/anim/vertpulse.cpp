@@ -16,6 +16,8 @@ void AnimVertPulseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phas
 	if (phase <= frPulse)
 	{
 		phase = phase / frPulse;
+		if (iPhase == 1 && bounce)
+			phase = 1 - phase;
 
 		// TODO: make sin phase (how to combine dif phases with multi phase?)
 		float theta = mapfr(phase, -PI/2, PI/2);
@@ -40,8 +42,15 @@ void AnimVertPulseBase<TPhase>::Display(LedStrip& strip, Frame frame, float phas
 	}
 }
 
-AnimBreathe::AnimBreathe(float width, float duration)
-	: AnimVertPulseBase<PhaseLinear>(width, PhaseLinear(duration)) {}
+AnimBreathe::AnimBreathe(bool bounce)
+	: AnimVertPulseBase<PhaseLinear>(bounce, .4, PhaseLinear(4000)) {}
+
+void AnimBreathe::Update(LedStrip& strip, Frame frame)
+{
+	float duration = mapfr(frame.knobC, 1000, 8000);
+	phase.invDuration = 1.f / duration;
+	AnimVertPulseBase::Update(strip, frame);
+}
 
 AnimVertPulse::AnimVertPulse()
-	: AnimVertPulseBase<PhasePulse>(.126, PhasePulse(.1, 2.7)) {}
+	: AnimVertPulseBase<PhasePulse>(false, .126, PhasePulse(.1, 2.7)) {}

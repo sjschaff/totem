@@ -33,10 +33,10 @@ public:
 	void OnPressA() {
 		OnPress('A');
 
-		/*if (mode == &chillax)
+		if (mode == &chillax)
 			mode = &audioPulse;
 		else
-			mode = &chillax;*/
+			mode = &chillax;
 	}
 
 	void OnPressB() { OnPress('B'); mode->OnPressB(); }
