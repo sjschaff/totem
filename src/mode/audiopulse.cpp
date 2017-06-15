@@ -2,23 +2,12 @@
 #include "anim/anims.h"
 
 // Main TODO:
-// - mirror versions of all spinning type animations
-// - auto anim switching + auto color switching
-// 		- buttons to cycle
-// - animation transitions
-//		- random duration around ~15-30 secs?
-// 		- needs anim overlay
-// - color modes:
-//		- auto
+// - color modes chill:
+//		- auto rainbow
+//		- auto rainbow dual
 //		- fixed (rainbow knob)
-//		- fixed (hue pair knob)
-//		- rainbow
-// - chill mode:
-//		- knobs for speed
-// - disable knobs?
-// - Manual anim+color selection mode for audiopulse?
+//		- fixed (rainbow dual knob)
 // - fix battery pack
-// - tune color pulse
 
 
 // rnd face pulse (color+compl on inner outer rings)
@@ -26,7 +15,7 @@
 // Colr offset takes phase and color and offsets frColr by phase
 // Beat offset? takes frame and color and offsets iColr by beatCounter (+1, or +0)?
 
-// Global frPolar rainbow looks sick, would make good lighthouse type effect
+
 
 // Some day:
 //  -automatic brightness adjustment based on power consumption to prevent overdraw
@@ -38,19 +27,12 @@
 //  -fancier combinitorial phase/param/anim system
 //  -make flickering part of color for better combinitorial?
 //  -try using beats to widen lighthouse instead of pulse it
-
-// buttons:
-// next mode
-// rage mode?
-// disable knobs
-// per mode:
-// 	next color
-// 	next anim
-// 	color mode -> random, fixed dual, fixed single, rainbow?
-
-// knobs
-// brightness
-// color
+//	-lighthouse linear at fast speed looks pretty cool (i.e 1000ms)
+//	-rage/attack mode
+//  -Global frPolar rainbow looks sick, would make good lighthouse type effect
+// 	-animation transitions
+//		- random duration around ~15-30 secs?
+//		- needs anim overlay
 
 void AudioPulse::Update(Frame frame)
 {

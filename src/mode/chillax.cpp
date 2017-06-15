@@ -8,7 +8,8 @@ Chillax::Chillax(LedStrip& strip)
 
 	anims.push_back(new AnimBreathe(true));
 	anims.push_back(new AnimBreathe(false));
-	//anims.push_back(new AnimLighthouse(false, .2, 4000*4));
+	anims.push_back(new AnimLighthouse(false));
+	anims.push_back(new AnimLighthouse(true));
 
 	colrs.push_back(new ColrSolid(Colr::Green));
 }

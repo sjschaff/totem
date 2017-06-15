@@ -50,8 +50,8 @@ public:
 		input(this), audio(input),
 		audioPulse(strip), chillax(strip)
 	{
-		//mode = &chillax;
-		mode = &audioPulse;
+		mode = &chillax;
+		//mode = &audioPulse;
 	}
 
 	void OnPress(char c)

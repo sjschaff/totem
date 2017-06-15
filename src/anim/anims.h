@@ -44,7 +44,8 @@ public:
 class AnimLighthouse : public LighthouseBase<PhaseLinear>
 {
 public:
-	AnimLighthouse(bool dir, float width, float duration);
+	AnimLighthouse(bool dir);
+	void Update(LedStrip& strip, Frame frame);
 };
 
 class AnimLighthousePulse : public LighthouseBase<PhasePulse>
